@@ -1,2 +1,6 @@
 Library/*
 Temp/*
+.vs/*
+obj/*
+Assembly-CSharp*
+*.sln

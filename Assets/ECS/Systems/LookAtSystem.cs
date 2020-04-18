@@ -25,8 +25,8 @@ namespace Common.ECS.Systems
                     rotation.Value = quaternion.LookRotation(heading, math.up());
                 }
                 
-            });
-            return jobHandle.Schedule(inputDeps);
+            }).Schedule(inputDeps);
+            return jobHandle;
         }
     }
 }
