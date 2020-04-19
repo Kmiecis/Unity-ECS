@@ -10,30 +10,30 @@ namespace Common.Mathematics
 
         public static readonly float2[] V2 = new float2[]
         {
-            new float2(-CENTER_TO_VERTEX, 0),
-            new float2(-CENTER_TO_VERTEX * 0.5f, +CENTER_TO_SIDE),
-            new float2(+CENTER_TO_VERTEX * 0.5f, +CENTER_TO_SIDE),
-            new float2(+CENTER_TO_VERTEX, 0),
-            new float2(+CENTER_TO_VERTEX * 0.5f, -CENTER_TO_SIDE),
-            new float2(-CENTER_TO_VERTEX * 0.5f, -CENTER_TO_SIDE)
+            new float2(0, +CENTER_TO_VERTEX),
+            new float2(+CENTER_TO_SIDE, +CENTER_TO_VERTEX * 0.5f),
+            new float2(+CENTER_TO_SIDE, -CENTER_TO_VERTEX * 0.5f),
+            new float2(0, -CENTER_TO_VERTEX),
+            new float2(-CENTER_TO_SIDE, -CENTER_TO_VERTEX * 0.5f),
+            new float2(-CENTER_TO_SIDE, +CENTER_TO_VERTEX * 0.5f),
         };
 
         public static readonly float3[] V3 = new float3[]
         {
-            new float3(-CENTER_TO_VERTEX, 0, 0),
-            new float3(-CENTER_TO_VERTEX * 0.5f, 0, +CENTER_TO_SIDE),
-            new float3(+CENTER_TO_VERTEX * 0.5f, 0, +CENTER_TO_SIDE),
-            new float3(+CENTER_TO_VERTEX, 0, 0),
-            new float3(+CENTER_TO_VERTEX * 0.5f, 0, -CENTER_TO_SIDE),
-            new float3(-CENTER_TO_VERTEX * 0.5f, 0, -CENTER_TO_SIDE)
+            new float3(0, 0, +CENTER_TO_VERTEX),
+            new float3(+CENTER_TO_SIDE, 0, +CENTER_TO_VERTEX * 0.5f),
+            new float3(+CENTER_TO_SIDE, 0, -CENTER_TO_VERTEX * 0.5f),
+            new float3(0, 0, -CENTER_TO_VERTEX),
+            new float3(-CENTER_TO_SIDE, 0, -CENTER_TO_VERTEX * 0.5f),
+            new float3(-CENTER_TO_SIDE, 0, +CENTER_TO_VERTEX * 0.5f),
         };
 
         public static readonly int2[] T = new int2[]
         {
             new int2() { x = +0, y = +1 },
             new int2() { x = +1, y = +0 },
-            new int2() { x = +1, y = -1 },
             new int2() { x = +0, y = -1 },
+            new int2() { x = -1, y = -1 },
             new int2() { x = -1, y = +0 },
             new int2() { x = -1, y = +1 }
         };
@@ -43,7 +43,7 @@ namespace Common.Mathematics
         /// </summary>
         public static float3 Convert(int2 v)
         {
-            float x = (v.x * 2f + v.y) * CENTER_TO_SIDE;
+            float x = (v.x + v.y * 0.5f - v.y / 2)* CENTER_TO_SIDE * 2f;
             float z = v.y * CENTER_TO_VERTEX * 1.5f;
 
             return new float3(x, 0f, z);
@@ -82,7 +82,7 @@ namespace Common.Mathematics
 
         public enum Direction
         {
-            W, NW, NE, E, SE, SW, Count
+            NE, E, SE, SW, W, NW, Count
         }
     }
 }
