@@ -2,5 +2,5 @@ Library/*
 Temp/*
 .vs/*
 obj/*
-Assembly-CSharp*
+*.csproj
 *.sln
