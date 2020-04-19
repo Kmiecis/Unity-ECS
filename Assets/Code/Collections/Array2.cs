@@ -20,7 +20,7 @@ namespace Common.Collections
         public int Height
             => Extents.y;
 
-        public int Count
+        public int Length
             => Width * Height;
 
         public Array2(int2 extents)
@@ -48,18 +48,6 @@ namespace Common.Collections
             get { return this[xy.x, xy.y]; }
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             set { this[xy.x, xy.y] = value; }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool InBounds(int x, int y)
-        {
-            return x > -1 && x < m_Extents.x && y > -1 && y < m_Extents.y;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool InBounds(int2 xy)
-        {
-            return InBounds(xy.x, xy.y);
         }
     }
 }

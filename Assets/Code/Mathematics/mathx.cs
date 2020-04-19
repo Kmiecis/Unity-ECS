@@ -70,12 +70,6 @@ namespace Common.Mathematics
             return a < t && t < b;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool inrange(int a, int b, int t)
-        {
-            return a <= t && t < b;
-        }
-
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int next(int v, int count, int offset = 1)

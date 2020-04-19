@@ -127,7 +127,7 @@ namespace Common.Mathematics
                             {
                                 if (dx == x && dy == y)
                                     continue;
-                                if (mathx.inrange(0, extents.x, dx) && mathx.inrange(0, extents.y, dy))
+                                if (mathx.between(-1, extents.x, dx) && mathx.between(-1, extents.y, dy))
                                     counter += result[dx, dy];
                             }
                         }

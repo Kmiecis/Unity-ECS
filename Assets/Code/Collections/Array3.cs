@@ -8,25 +8,25 @@ namespace Common.Collections
         private int3 m_Extents;
         private T[] m_Array;
 
-        public int3 Length
+        public int3 Extents
             => m_Extents;
 
         public T[] Array
             => m_Array;
 
         public int Width
-            => Length.x;
+            => Extents.x;
 
         public int Height
-            => Length.y;
+            => Extents.y;
 
-        public int Count
+        public int Length
             => Width * Height;
 
-        public Array3(int3 length)
+        public Array3(int3 extents)
         {
-            m_Extents = length;
-            m_Array = new T[length.x * length.y];
+            m_Extents = extents;
+            m_Array = new T[extents.x * extents.y];
         }
 
         public Array3(int width, int height, int depth)
@@ -48,18 +48,6 @@ namespace Common.Collections
             get { return this[xyz.x, xyz.y, xyz.z]; }
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             set { this[xyz.x, xyz.y, xyz.z] = value; }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool InBounds(int x, int y, int z)
-        {
-            return x > -1 && x < m_Extents.x && y > -1 && y < m_Extents.y && z > -1 && z < m_Extents.z;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool InBounds(int3 xyz)
-        {
-            return InBounds(xyz.x, xyz.y, xyz.z);
         }
     }
 }

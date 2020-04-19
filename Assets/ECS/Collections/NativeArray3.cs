@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Mathematics;
@@ -10,31 +11,31 @@ namespace Common.ECS.Collections
     public struct NativeArray3<T> : IDisposable
         where T : struct
     {
-        private int3 m_Length;
+        private int3 m_Extents;
         private NativeArray<T> m_Array;
 
-        public int3 Length
-            => m_Length;
+        public int3 Extents
+            => m_Extents;
 
         public NativeArray<T> Array
             => m_Array;
 
-        public int Count
-            => Width * Height * Depth;
-
         public int Width
-            => Length.x;
+            => Extents.x;
 
         public int Height
-            => Length.y;
+            => Extents.y;
 
         public int Depth
-            => Length.z;
+            => Extents.z;
 
-        public NativeArray3(int3 length, Allocator allocator)
+        public int Length
+            => Width * Height * Depth;
+
+        public NativeArray3(int3 extents, Allocator allocator)
         {
-            m_Length = length;
-            m_Array = new NativeArray<T>(length.x * length.y * length.z, allocator);
+            m_Extents = extents;
+            m_Array = new NativeArray<T>(extents.x * extents.y * extents.z, allocator);
         }
 
         public NativeArray3(int width, int height, int depth, Allocator allocator) :
@@ -44,8 +45,18 @@ namespace Common.ECS.Collections
 
         public T this[int x, int y, int z]
         {
-            get { return m_Array[z * Height * Width + y * Width + x]; }
-            set { m_Array[z * Height * Width + y * Width + x] = value; }
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get { return m_Array[z * m_Extents.y * m_Extents.x + y * m_Extents.x + x]; }
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            set { m_Array[z * m_Extents.y * m_Extents.x + y * m_Extents.x + x] = value; }
+        }
+
+        public T this[int3 xyz]
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get { return this[xyz.x, xyz.y, xyz.z]; }
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            set { this[xyz.x, xyz.y, xyz.z] = value; }
         }
 
         public void Dispose()
