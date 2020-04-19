@@ -38,6 +38,9 @@ namespace Common.Mathematics
             new int2() { x = -1, y = +1 }
         };
 
+        /// <summary>
+        /// Convers position defined in hex coordinates to world position
+        /// </summary>
         public static float3 Convert(int2 v)
         {
             float x = (v.x * 2f + v.y) * CENTER_TO_SIDE;
@@ -46,6 +49,9 @@ namespace Common.Mathematics
             return new float3(x, 0f, z);
         }
 
+        /// <summary>
+        /// Converts position defined as world position to hex coordinates
+        /// </summary>
         public static int2 Convert(float3 v)
         {
             float x = v.x / (CENTER_TO_SIDE * 2f);
