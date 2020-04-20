@@ -7,12 +7,12 @@ using Unity.Transforms;
 
 namespace Common.ECS.Systems
 {
-    public class LookAtSystem : JobComponentSystem
+    public class LookAtTargetSystem : JobComponentSystem
     {
         protected override JobHandle OnUpdate(JobHandle inputDeps)
         {
             var translationComponents = GetComponentDataFromEntity<Translation>(true);
-            var jobHandle = Entities.ForEach((ref Rotation rotation, in Translation translation, in LookAt lookAt) =>
+            var jobHandle = Entities.ForEach((ref Rotation rotation, in Translation translation, in LookAtTarget lookAt) =>
             {
                 if (translationComponents.Exists(lookAt.target))
                 {
@@ -24,8 +24,8 @@ namespace Common.ECS.Systems
 
                     rotation.Value = quaternion.LookRotation(heading, math.up());
                 }
-                
-            }).Schedule(inputDeps);
+            }
+            ).Schedule(inputDeps);
             return jobHandle;
         }
     }

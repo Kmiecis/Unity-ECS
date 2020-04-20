@@ -60,6 +60,7 @@ namespace Common.ECS.Systems
 
                     m_EntityManager.SetComponentData(entity, entityTranslation);
                     m_EntityManager.SetComponentData(entity, entityRotation);
+                    m_EntityManager.RemoveComponent<Prefab>(entity);
                 }
                 
                 entities.Dispose();

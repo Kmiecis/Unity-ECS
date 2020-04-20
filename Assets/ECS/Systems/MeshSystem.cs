@@ -64,7 +64,7 @@ namespace Common.ECS.Systems
                 var meshRequest = m_EntityManager.GetComponentData<MeshRequest>(entity);
                 var renderMesh = m_EntityManager.GetSharedComponentData<RenderMesh>(entity);
                 renderMesh.mesh = mesh;
-                renderMesh.material = Resourcer.Load<Material>(meshRequest.materialPath);
+                renderMesh.material = ResourceManager.Load<Material>(meshRequest.materialPath);
                 renderMesh.castShadows = meshRequest.castShadows;
                 renderMesh.receiveShadows = meshRequest.receiveShadows;
                 m_EntityManager.SetSharedComponentData(entity, renderMesh);

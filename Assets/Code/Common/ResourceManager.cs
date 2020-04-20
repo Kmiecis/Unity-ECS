@@ -2,7 +2,7 @@
 
 namespace Common
 {
-    public static class Resourcer
+    public static class ResourceManager
     {
         private static Object[] m_Resources = new Object[(int)ResourcePath.Count];
 
