@@ -9,17 +9,12 @@ namespace Common.ECS.Systems
     {
         protected override JobHandle OnUpdate(JobHandle inputDeps)
         {
-            var jobHandle2D = Entities.ForEach((ref Movement2D movement, in Speed speed) =>
+            var jobHandle = Entities.ForEach((ref Movement movement, in Speed speed) =>
             {
                 movement.value *= speed.value;
             }
             ).Schedule(inputDeps);
-            var jobHandle3D = Entities.ForEach((ref Movement3D movement, in Speed speed) =>
-            {
-                movement.value *= speed.value;
-            }
-            ).Schedule(jobHandle2D);
-            return jobHandle3D;
+            return jobHandle;
         }
     }
 }

@@ -19,7 +19,8 @@ namespace Common.ECS.Systems
         protected override JobHandle OnUpdate(JobHandle inputDeps)
         {
             var commandBuffer = m_CommandBufferSystem.CreateCommandBuffer().ToConcurrent();
-            var jobHandle = Entities.ForEach((Entity entity, in SpawnPlayerRequest request) => {
+            var jobHandle = Entities.ForEach((Entity entity, in SpawnPlayerRequest request) =>
+            {
                 commandBuffer.RemoveComponent<SpawnPlayerRequest>(JOB_INDEX, entity);
                 var requestDatas = commandBuffer.AddBuffer<InstantiatePrefabData>(JOB_INDEX, entity);
                 var requestPath = new InstantiatePrefabPath { value = ResourcePath.Prefabs_Player };
@@ -31,7 +32,8 @@ namespace Common.ECS.Systems
                     rotation = quaternion.identity
                 };
                 requestDatas.Add(requestData);
-            }).Schedule(inputDeps);
+            }
+            ).Schedule(inputDeps);
             m_CommandBufferSystem.AddJobHandleForProducer(inputDeps);
             return jobHandle;
         }

@@ -12,14 +12,14 @@ namespace Common.ECS.Systems
         protected override JobHandle OnUpdate(JobHandle inputDeps)
         {
             var translationComponents = GetComponentDataFromEntity<Translation>(true);
-            var jobHandle = Entities.ForEach((ref Rotation rotation, in Translation translation, in LookAtTarget lookAt) =>
+            var jobHandle = Entities.ForEach((ref Rotation rotation, in Translation translation, in LookAtTarget target) =>
             {
-                if (translationComponents.Exists(lookAt.target))
+                if (translationComponents.Exists(target.value))
                 {
-                    var position = translation.Value;
-                    var targetPosition = translationComponents[lookAt.target].Value;
+                    var entityPosition = translation.Value;
+                    var targetPosition = translationComponents[target.value].Value;
 
-                    var heading = targetPosition - position;
+                    var heading = targetPosition - entityPosition;
                     heading.y = 0f;
 
                     rotation.Value = quaternion.LookRotation(heading, math.up());

@@ -10,10 +10,10 @@ namespace Common.ECS.Systems
     {
         protected override JobHandle OnUpdate(JobHandle inputDeps)
         {
-            var jobHandle = Entities.ForEach((ref Rotation rotation, in Translation translation, in LookAtPosition target) =>
+            var jobHandle = Entities.ForEach((ref Rotation rotation, in Translation translation, in LookAtPosition position) =>
             {
                 var entityPosition = translation.Value;
-                var targetPosition = target.position;
+                var targetPosition = position.value;
 
                 var heading = targetPosition - entityPosition;
                 heading.y = 0f;

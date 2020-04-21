@@ -18,9 +18,11 @@ namespace Common.ECS.Systems
         protected override JobHandle OnUpdate(JobHandle inputDeps)
         {
             var commandBuffer = m_CommandBuffer.CreateCommandBuffer().ToConcurrent();
-            var jobHandle = Entities.WithAll<DestroyTag>().ForEach((Entity entity) => {
+            var jobHandle = Entities.WithAll<DestroyTag>().ForEach((Entity entity) =>
+            {
                 commandBuffer.RemoveComponent<DestroyTag>(entity.Index, entity);
-            }).Schedule(inputDeps);
+            }
+            ).Schedule(inputDeps);
             m_CommandBuffer.AddJobHandleForProducer(jobHandle);
             return jobHandle;
         }

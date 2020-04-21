@@ -9,18 +9,12 @@ namespace Common.ECS.Systems
     {
         protected override JobHandle OnUpdate(JobHandle inputDeps)
         {
-            var deltaTime = Time.DeltaTime;
-            var jobHandle2D = Entities.ForEach((ref Translation translation, in Movement2D movement) =>
+            var jobHandle = Entities.ForEach((ref Translation translation, in Movement movement) =>
             {
-                translation.Value += movement.value.x_z() * deltaTime;
+                translation.Value += movement.value;
             }
             ).Schedule(inputDeps);
-            var jobHandle3D = Entities.ForEach((ref Translation translation, in Movement3D movement) =>
-            {
-                translation.Value += movement.value * deltaTime;
-            }
-            ).Schedule(jobHandle2D);
-            return jobHandle3D;
+            return jobHandle;
         }
     }
 }

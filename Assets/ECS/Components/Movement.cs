@@ -4,8 +4,8 @@ using Unity.Mathematics;
 namespace Common.ECS.Components
 {
     [GenerateAuthoringComponent]
-    public struct Movement2D : IComponentData
+    public struct Movement : IComponentData
     {
-        public float2 value;
+        public float3 value;
     }
 }

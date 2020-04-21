@@ -2,7 +2,7 @@
 
 namespace Common.ECS.Components
 {
-    public struct LookAtTarget : IComponentData
+    public struct FollowTarget : IComponentData
     {
         public Entity value;
     }
