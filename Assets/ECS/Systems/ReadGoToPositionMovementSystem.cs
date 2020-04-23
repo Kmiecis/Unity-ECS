@@ -6,13 +6,14 @@ using Unity.Transforms;
 
 namespace Common.ECS.Systems
 {
+    [AlwaysSynchronizeSystem]
     [UpdateBefore(typeof(ApplySpeedSystem))]
     public class ReadGoToPositionMovementSystem : JobComponentSystem
     {
         protected override JobHandle OnUpdate(JobHandle inputDeps)
         {
             var deltaTime = Time.DeltaTime;
-            var jobHandle = Entities.ForEach((ref Movement movement, in Translation translation, in GoToPosition position) =>
+            Entities.ForEach((ref Movement movement, in Translation translation, in GoToPosition position) =>
             {
                 var entityPosition = translation.Value;
                 var targetPosition = position.value;
@@ -25,8 +26,8 @@ namespace Common.ECS.Systems
 
                 movement.value = deltaPosition * deltaTime;
             }
-            ).Schedule(inputDeps);
-            return jobHandle;
+            ).Run();
+            return default;
         }
     }
 }

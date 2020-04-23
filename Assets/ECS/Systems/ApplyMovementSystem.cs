@@ -5,16 +5,17 @@ using Unity.Transforms;
 
 namespace Common.ECS.Systems
 {
+    [AlwaysSynchronizeSystem]
     public class ApplyMovementSystem : JobComponentSystem
     {
         protected override JobHandle OnUpdate(JobHandle inputDeps)
         {
-            var jobHandle = Entities.ForEach((ref Translation translation, in Movement movement) =>
+            Entities.ForEach((ref Translation translation, in Movement movement) =>
             {
                 translation.Value += movement.value;
             }
-            ).Schedule(inputDeps);
-            return jobHandle;
+            ).Run();
+            return default;
         }
     }
 }

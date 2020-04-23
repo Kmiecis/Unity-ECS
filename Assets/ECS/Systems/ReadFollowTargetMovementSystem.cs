@@ -6,6 +6,7 @@ using Unity.Transforms;
 
 namespace Common.ECS.Systems
 {
+    [AlwaysSynchronizeSystem]
     [UpdateBefore(typeof(ApplySpeedSystem))]
     public class ReadFollowTargetMovementSystem : JobComponentSystem
     {
@@ -13,7 +14,7 @@ namespace Common.ECS.Systems
         {
             var deltaTime = Time.DeltaTime;
             var translationComponents = GetComponentDataFromEntity<Translation>(true);
-            var jobHandle = Entities.ForEach((ref Movement movement, in Translation translation, in FollowTarget target) =>
+            Entities.ForEach((ref Movement movement, in Translation translation, in FollowTarget target) =>
             {
                 if (translationComponents.Exists(target.value))
                 {
@@ -33,8 +34,8 @@ namespace Common.ECS.Systems
                     movement.value = 0f;
                 }
             }
-            ).Schedule(inputDeps);
-            return jobHandle;
+            ).Run();
+            return default;
         }
     }
 }

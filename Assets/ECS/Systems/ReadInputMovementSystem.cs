@@ -5,6 +5,7 @@ using Unity.Mathematics;
 
 namespace Common.ECS.Systems
 {
+    [AlwaysSynchronizeSystem]
     [UpdateBefore(typeof(ApplySpeedSystem))]
     public class ReadInputMovementSystem : JobComponentSystem
     {
@@ -14,14 +15,14 @@ namespace Common.ECS.Systems
             var dh = CrossPlatformInput.GetAxisHorizontal();
             var dv = CrossPlatformInput.GetAxisVertical();
 
-            var jobHandle = Entities.WithAll<InputHorizontal, InputVertical>().ForEach((ref Movement movement) =>
+            Entities.WithAll<InputHorizontal, InputVertical>().ForEach((ref Movement movement) =>
             {
                 var delta = (dh > 0 && dv > 0) ? math.normalize(new float2(dh, dv)) : new float2(dh, dv);
                 delta *= deltaTime;
                 movement.value = delta.x_z();
             }
-            ).Schedule(inputDeps);
-            return jobHandle;
+            ).Run();
+            return default;
         }
     }
 }

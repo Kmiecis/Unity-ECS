@@ -6,6 +6,7 @@ using Unity.Transforms;
 
 namespace Common.ECS.Systems
 {
+    [AlwaysSynchronizeSystem]
     [UpdateAfter(typeof(ApplySpeedSystem))]
     [UpdateBefore(typeof(ApplyMovementSystem))]
     public class VerifyFollowTargetMovementSystem : JobComponentSystem
@@ -13,7 +14,7 @@ namespace Common.ECS.Systems
         protected override JobHandle OnUpdate(JobHandle inputDeps)
         {
             var translationComponents = GetComponentDataFromEntity<Translation>(true);
-            var jobHandle = Entities.ForEach((ref Movement movement, in Translation translation, in FollowTarget target) =>
+            Entities.ForEach((ref Movement movement, in Translation translation, in FollowTarget target) =>
             {
                 if (translationComponents.Exists(target.value))
                 {
@@ -31,8 +32,8 @@ namespace Common.ECS.Systems
                     }
                 }
             }
-            ).Schedule(inputDeps);
-            return jobHandle;
+            ).Run();
+            return default;
         }
     }
 }
