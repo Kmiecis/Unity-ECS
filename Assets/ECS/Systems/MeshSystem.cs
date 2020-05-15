@@ -48,17 +48,17 @@ namespace Common.ECS.Systems
                 var vertices = m_EntityManager.GetBuffer<MeshVerticesBuffer>(entity);
                 var triangles = m_EntityManager.GetBuffer<MeshTrianglesBuffer>(entity);
                 var normals = m_EntityManager.GetBuffer<MeshNormalsBuffer>(entity);
-                ApplyMeshBase(mesh, ref vertices, ref triangles, ref normals);
+                ApplyMeshBase(mesh, in vertices, in triangles, in normals);
 
                 if (m_EntityManager.HasComponent<MeshColorsBuffer>(entity))
                 {
                     var colors = m_EntityManager.GetBuffer<MeshColorsBuffer>(entity);
-                    ApplyMeshColors(mesh, ref colors);
+                    ApplyMeshColors(mesh, in colors);
                 }
                 if (m_EntityManager.HasComponent<MeshUVsBuffer>(entity))
                 {
                     var uvs = m_EntityManager.GetBuffer<MeshUVsBuffer>(entity);
-                    ApplyMeshUVs(mesh, ref uvs);
+                    ApplyMeshUVs(mesh, in uvs);
                 }
 
                 var meshRequest = m_EntityManager.GetComponentData<MeshRequest>(entity);
@@ -76,9 +76,9 @@ namespace Common.ECS.Systems
         }
 
         private void ApplyMeshBase(Mesh mesh,
-            [ReadOnly] ref DynamicBuffer<MeshVerticesBuffer> vs,
-            [ReadOnly] ref DynamicBuffer<MeshTrianglesBuffer> ts,
-            [ReadOnly] ref DynamicBuffer<MeshNormalsBuffer> ns)
+            in DynamicBuffer<MeshVerticesBuffer> vs,
+            in DynamicBuffer<MeshTrianglesBuffer> ts,
+            in DynamicBuffer<MeshNormalsBuffer> ns)
         {
             var vsArray = vs.Reinterpret<float3>().AsNativeArray();
             var tsArray = ts.Reinterpret<int>().AsNativeArray();
@@ -89,16 +89,14 @@ namespace Common.ECS.Systems
             mesh.SetNormals(nsArray);
         }
 
-        private void ApplyMeshColors(Mesh mesh,
-            [ReadOnly] ref DynamicBuffer<MeshColorsBuffer> cs)
+        private void ApplyMeshColors(Mesh mesh, in DynamicBuffer<MeshColorsBuffer> cs)
         {
             var csArray = cs.Reinterpret<Color>().AsNativeArray();
 
             mesh.SetColors(csArray);
         }
 
-        private void ApplyMeshUVs(Mesh mesh,
-            [ReadOnly] ref DynamicBuffer<MeshUVsBuffer> uvs)
+        private void ApplyMeshUVs(Mesh mesh, in DynamicBuffer<MeshUVsBuffer> uvs)
         {
             var uvsArray = uvs.Reinterpret<float2>().AsNativeArray();
 

@@ -7,7 +7,7 @@ using Unity.Mathematics;
 
 namespace Common.ECS.Systems
 {
-    public class CreateLevelSystem : JobComponentSystem
+    public class CreateLevelSystem : SystemBase
     {
         private BeginInitializationEntityCommandBufferSystem m_CommandBufferSystem;
 
@@ -17,15 +17,16 @@ namespace Common.ECS.Systems
             m_CommandBufferSystem = World.GetOrCreateSystem<BeginInitializationEntityCommandBufferSystem>();
         }
 
-        protected override JobHandle OnUpdate(JobHandle inputDeps)
+        protected override void OnUpdate()
         {
             var commandBuffer = m_CommandBufferSystem.CreateCommandBuffer().ToConcurrent();
-
-            var jobHandle = Entities.ForEach((Entity entity, in CreateLevelRequest request) => {
-                commandBuffer.RemoveComponent<CreateLevelRequest>(JOB_INDEX, entity);
-                var requestDatas = commandBuffer.AddBuffer<InstantiatePrefabData>(JOB_INDEX, entity);
-                var requestPath = new InstantiatePrefabPath { value = ResourcePath.Prefabs_Platform };
-                commandBuffer.AddComponent(JOB_INDEX, entity, requestPath);
+            
+            Entities.ForEach((Entity requestEntity, in CreateLevelRequest request) => {
+                var requestData = new InstantiateRequest
+                {
+                    path = ResourcePath.Prefabs_Platform,
+                    count = 1
+                };
 
                 var requestPosition = request.position;
                 var requestSize = request.size;
@@ -36,21 +37,21 @@ namespace Common.ECS.Systems
                         var hexPosition = new int2(x, y);
                         var position = HexModel.Convert(hexPosition);
 
-                        var requestData = new InstantiatePrefabData
+                        var platformRequestData = new InstantiatePlatformRequest
                         {
-                            translation = position,
-                            rotation = quaternion.identity
+                            position = position
                         };
 
-                        requestDatas.Add(requestData);
+                        var entity = commandBuffer.CreateEntity(requestEntity.Index);
+                        commandBuffer.AddComponent(requestEntity.Index, entity, requestData);
+                        commandBuffer.AddComponent(requestEntity.Index, entity, platformRequestData);
                     }
                 }
-            }).Schedule(inputDeps);
 
-            m_CommandBufferSystem.AddJobHandleForProducer(jobHandle);
-            return jobHandle;
+                commandBuffer.DestroyEntity(requestEntity.Index, requestEntity);
+            }).ScheduleParallel();
+
+            m_CommandBufferSystem.AddJobHandleForProducer(this.Dependency);
         }
-
-        private const int JOB_INDEX = 0;
     }
 }

@@ -1,9 +1,8 @@
 ﻿using Common.ECS.Components;
-using Common.Mathematics;
+using Common.ECS.Systems;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Common.ECS
 {
@@ -25,6 +24,8 @@ namespace Common.ECS
         {
             if (CrossPlatformInput.GetKeyDown(KeyCode.Space) && !m_Created)
             {
+                InstantiatePrefabSystem.EnsurePrefabExistence(World, ResourcePath.Prefabs_Platform);
+                InstantiatePrefabSystem.EnsurePrefabExistence(World, ResourcePath.Prefabs_Player);
                 m_Created = true;
 
                 var levelRequest = m_EntityManager.CreateEntity();
@@ -35,19 +36,14 @@ namespace Common.ECS
                 });
 
                 var playerRequest = m_EntityManager.CreateEntity();
-                m_EntityManager.AddComponentData(playerRequest, new SpawnPlayerRequest
+                m_EntityManager.AddComponentData(playerRequest, new InstantiateRequest
                 {
-                    position = new float2(0, 0)
+                    path = ResourcePath.Prefabs_Player,
+                    count = 1
                 });
-            }
-
-            if (CrossPlatformInput.GetKeyDown(KeyCode.R))
-            {
-                Entities.WithAll<Player>().ForEach((Entity entity) =>
+                m_EntityManager.AddComponentData(playerRequest, new InstantiatePlayerRequest
                 {
-                    var hexPosition = new int2 { x = Random.Range(0, width), y = Random.Range(0, height) };
-                    var goToPosition = new GoToPosition { value = HexModel.Convert(hexPosition) };
-                    m_EntityManager.EnsureComponentData(entity, goToPosition);
+                    position = float3.zero
                 });
             }
         }

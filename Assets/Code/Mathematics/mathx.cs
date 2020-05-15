@@ -7,12 +7,7 @@ namespace Common.Mathematics
     {
         public const float ROOT_2 = 1.41421356237f;
         public const float ROOT_3 = 1.73205080757f;
-
-
-        public static readonly float3 UP = new float3(0, 1, 0);
-        public static readonly float3 RIGHT = new float3(1, 0, 0);
-        public static readonly float3 FORWARD = new float3(0, 0, 1);
-
+        
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int round(float v)
