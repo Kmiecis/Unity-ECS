@@ -1,11 +1,10 @@
 ﻿using Unity.Entities;
-using Unity.Mathematics;
 
 namespace Common.ECS.Components
 {
     [GenerateAuthoringComponent]
-    public struct RotateToPosition : IComponentData
+    public struct PlatformPrefab : IComponentData
     {
-        public float3 value;
+        public Entity value;
     }
 }

@@ -43,10 +43,10 @@ namespace Common.ECS.Systems
 
             if (moves)
             {
-                Entities.WithAll<PlayerTag>().ForEach((ref RotateOverTime turn, in Rotation rotation) => {
-                    turn.fromRotation = rotation.Value;
-                    turn.toRotation = math.mul(rotation.Value, quaternion.LookRotation(direction, axis.UP));
-                    turn.timeRotation = 0f;
+                Entities.WithAll<PlayerTag>().ForEach((ref RotateOverTime rotate, in Rotation rotation) => {
+                    rotate.fromRotation = rotation.Value;
+                    rotate.toRotation = math.mul(rotation.Value, quaternion.LookRotation(direction, axis.UP));
+                    rotate.timeRotation = 0f;
                 }).ScheduleParallel();
             }
         }

@@ -6,6 +6,7 @@ using Unity.Transforms;
 
 namespace Common.ECS.Components
 {
+    [GenerateAuthoringComponent]
     public struct RotateOverTime : IComponentData
     {
         public quaternion fromRotation;

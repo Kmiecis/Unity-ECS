@@ -4,6 +4,7 @@ using Common.Mathematics;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
+using Unity.Transforms;
 
 namespace Common.ECS.Systems
 {
@@ -20,14 +21,10 @@ namespace Common.ECS.Systems
         protected override void OnUpdate()
         {
             var commandBuffer = m_CommandBufferSystem.CreateCommandBuffer().ToConcurrent();
-            
-            Entities.ForEach((Entity requestEntity, in CreateLevelRequest request) => {
-                var requestData = new InstantiateRequest
-                {
-                    path = ResourcePath.Prefabs_Platform,
-                    count = 1
-                };
 
+            var prefab = GetSingleton<PlatformPrefab>();
+
+            Entities.ForEach((Entity requestEntity, in CreateLevelRequest request) => {
                 var requestPosition = request.position;
                 var requestSize = request.size;
                 for (int y = 0; y < requestSize.y; y++)
@@ -36,15 +33,9 @@ namespace Common.ECS.Systems
                     {
                         var hexPosition = new int2(x, y);
                         var position = HexModel.Convert(hexPosition);
-
-                        var platformRequestData = new InstantiatePlatformRequest
-                        {
-                            position = position
-                        };
-
-                        var entity = commandBuffer.CreateEntity(requestEntity.Index);
-                        commandBuffer.AddComponent(requestEntity.Index, entity, requestData);
-                        commandBuffer.AddComponent(requestEntity.Index, entity, platformRequestData);
+                        
+                        var entity = commandBuffer.Instantiate(requestEntity.Index, prefab.value);
+                        commandBuffer.SetComponent(requestEntity.Index, entity, new Translation { Value = position });
                     }
                 }
 
