@@ -37,18 +37,10 @@ namespace Common.ECS.Systems
             if (math.lengthsq(direction) > 1)
                 direction = math.normalize(direction);
 
-            Entities.WithAll<PlayerTag>().ForEach((ref Move movement) => {
-                movement.value = direction;
+            Entities.ForEach((ref PlayerInput playerInput) => {
+                playerInput.moves = moves;
+                playerInput.direction = direction;
             }).ScheduleParallel();
-
-            if (moves)
-            {
-                Entities.WithAll<PlayerTag>().ForEach((ref RotateOverTime rotate, in Rotation rotation) => {
-                    rotate.fromRotation = rotation.Value;
-                    rotate.toRotation = math.mul(rotation.Value, quaternion.LookRotation(direction, axis.UP));
-                    rotate.timeRotation = 0f;
-                }).ScheduleParallel();
-            }
         }
     }
 }
