@@ -1,5 +1,5 @@
 
-=== Sat Apr 18 22:11:53 2020
+=== Thu Jun  4 06:27:32 2020
 
 Packages were changed.
 Update Mode: mergeDefaultDependencies
@@ -7,7 +7,7 @@ Update Mode: mergeDefaultDependencies
 The following packages were added:
   com.unity.collab-proxy@1.2.16
   com.unity.ide.rider@1.1.4
-  com.unity.ide.vscode@1.1.4
+  com.unity.ide.vscode@1.2.0
   com.unity.modules.ai@1.0.0
   com.unity.modules.androidjni@1.0.0
   com.unity.modules.animation@1.0.0
