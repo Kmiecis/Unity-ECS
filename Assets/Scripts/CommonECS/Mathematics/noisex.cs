@@ -10,7 +10,7 @@ namespace CommonECS.Mathematics
 		/// <summary> Noise Map generator </summary>
 		public static void map(ref NativeArray2<float> map,
 			int2 offset = default,
-			int octaves = 1, float persistance = 0.5f, float lacunarity = 2f,
+			int octaves = 1, float persistance = 0.5f, float lacunarity = 2.0f,
 			float2 scale = default, uint seed = 1
 		)
 		{
@@ -19,16 +19,16 @@ namespace CommonECS.Mathematics
 			var random = new Random(seed);
 			float2 randomOffset = new float2(random.NextFloat(-99999.0f, +99999.0f), random.NextFloat(-99999.0f, +99999.0f));
 			float2 middleOffset = new float2(extents.x * 0.5f, extents.y * 0.5f);
-			float2 revertedExtents = new float2(1f / extents.x, 1f / extents.y);
-			float2 revertedScale = new float2(1f / math.min(scale.x, 1e-5f), 1f / math.min(scale.y, 1e-5f));
+			float2 revertedExtents = new float2(1.0f / extents.x, 1.0f / extents.y);
+			float2 revertedScale = new float2(1.0f / math.max(scale.x, 1e-5f), 1.0f / math.max(scale.y, 1e-5f));
 
 			for (int y = 0; y < extents.y; ++y)
 			{
 				for (int x = 0; x < extents.x; ++x)
 				{
-					float amplitude = 1f;
-					float frequency = 1f;
-					float value = 0f;
+					float amplitude = 1.0f;
+					float frequency = 1.0f;
+					float value = 0.0f;
 
 					for (int i = 0; i < octaves; ++i)
 					{
@@ -48,15 +48,15 @@ namespace CommonECS.Mathematics
 		}
 
 		/// <summary> Noise Map generator smoothed to [0 .. 1] values </summary>
-		public static void smoothmap(ref NativeArray2<float> smoothmap,
+		public static void smoothmap(ref NativeArray2<float> map,
 			int2 offset = default,
-			int octaves = 1, float persistance = 0.5f, float lacunarity = 2f,
+			int octaves = 1, float persistance = 0.5f, float lacunarity = 2.0f,
 			float2 scale = default, uint seed = 1
 		)
 		{
-			var extents = smoothmap.Extents;
+			var extents = map.Extents;
 
-			float2 noiseHeightMinMax = new float2(0f, 1f);
+			float2 noiseHeightMinMax = new float2(0.0f, 1.0f);
 			for (int i = 1; i < octaves; ++i)
 			{
 				float persistanceAffection = math.pow(persistance, i);
@@ -67,16 +67,16 @@ namespace CommonECS.Mathematics
 			var random = new Random(seed);
 			float2 randomOffset = new float2(random.NextFloat(-99999.0f, +99999.0f), random.NextFloat(-99999.0f, +99999.0f));
 			float2 middleOffset = new float2(extents.x * 0.5f, extents.y * 0.5f);
-			float2 revertedExtents = new float2(1f / extents.x, 1f / extents.y);
-			float2 revertedScale = new float2(1f / math.max(scale.x, 1e-4f), 1f / math.max(scale.y, 1e-4f));
+			float2 revertedExtents = new float2(1.0f / extents.x, 1.0f / extents.y);
+			float2 revertedScale = new float2(1.0f / math.max(scale.x, 1e-4f), 1.0f / math.max(scale.y, 1e-4f));
 
 			for (int y = 0; y < extents.y; ++y)
 			{
 				for (int x = 0; x < extents.x; ++x)
 				{
-					float amplitude = 1f;
-					float frequency = 1f;
-					float value = 0f;
+					float amplitude = 1.0f;
+					float frequency = 1.0f;
+					float value = 0.0f;
 
 					for (int i = 0; i < octaves; ++i)
 					{
@@ -90,7 +90,7 @@ namespace CommonECS.Mathematics
 						frequency *= lacunarity;
 					}
 
-					smoothmap[x, y] = math.smoothstep(noiseHeightMinMax.x, noiseHeightMinMax.y, value);
+					map[x, y] = math.smoothstep(noiseHeightMinMax.x, noiseHeightMinMax.y, value);
 				}
 			}
 		}
@@ -105,11 +105,12 @@ namespace CommonECS.Mathematics
 			{
 				for (int x = 0; x < extents.x; ++x)
 				{
-					var randomValue = random.NextFloat(0f, 1f);
+					var randomValue = random.NextFloat(0.0f, 1.0f);
 					var value = randomValue < fill ? 1 : 0;
 					map[x, y] = value;
 				}
 			}
+
 			for (int i = 0; i < smooths; ++i)
 			{
 				for (int y = 0; y < extents.y; ++y)
@@ -117,21 +118,24 @@ namespace CommonECS.Mathematics
 					for (int x = 0; x < extents.x; ++x)
 					{
 						int counter = 0;
-						for (int dy = y - 1; dy <= y + 1; ++dy)
+
+						int dyMin = math.max(y - 1, 0);
+						int dyMax = math.min(y + 1, extents.y - 1);
+						for (int dy = dyMin; dy <= dyMax; ++dy)
 						{
-							for (int dx = x - 1; dx <= x + 1; ++dx)
+							int dxMin = math.max(x - 1, 0);
+							int dxMax = math.min(x + 1, extents.x - 1);
+							for (int dx = dxMin; dx <= dxMax; ++dx)
 							{
 								if (dx == x && dy == y)
 								{
 									continue;
 								}
 
-								if (mathx.between(-1, extents.x, dx) && mathx.between(-1, extents.y, dy))
-								{
-									counter += map[dx, dy];
-								}
+								counter += map[dx, dy];
 							}
 						}
+
 						if (counter > 4)
 						{
 							map[x, y] = 1;
