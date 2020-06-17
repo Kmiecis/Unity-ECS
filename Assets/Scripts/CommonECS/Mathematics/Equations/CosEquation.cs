@@ -1,8 +1,10 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 
 namespace CommonECS.Mathematics
 {
+	[Serializable]
 	public struct CosEquation
 	{
 		public float dx, sx, dy, sy;

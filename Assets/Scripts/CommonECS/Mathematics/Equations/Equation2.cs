@@ -3,11 +3,13 @@ using System.Runtime.CompilerServices;
 
 namespace CommonECS.Mathematics
 {
-	/// <summary> Equation in form of x * a + y * b = z </summary>
+	/// <summary> Equation in form of: x * a + y * b = z </summary>
 	[Serializable]
 	public struct Equation2
 	{
 		public float x, y, z;
+
+		public static readonly Equation2 invalid;
 
 		public Equation2(float x, float y, float z)
 		{
@@ -71,7 +73,19 @@ namespace CommonECS.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public bool IsValid()
 		{
-			return x != 0.0f && y != 0.0f;
+			return x != 0.0f || y != 0.0f;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public Equation1 WithZeroA()
+		{
+			return new Equation1(y, z);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public Equation1 WithZeroB()
+		{
+			return new Equation1(x, z);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -96,6 +110,30 @@ namespace CommonECS.Mathematics
 		public static Equation2 operator -(Equation2 a, Equation2 b)
 		{
 			return new Equation2(a.x - b.x, a.y - b.y, a.z - b.z);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public bool Equals(Equation2 other)
+		{
+			return this.x == other.x && this.y == other.y && this.z == other.z;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public override bool Equals(object obj)
+		{
+			return obj is Equation2 && Equals((Equation2)obj);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public override int GetHashCode()
+		{
+			return x.GetHashCode() ^ y.GetHashCode() ^ z.GetHashCode();
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public override string ToString()
+		{
+			return string.Format("{0}a + {1}b = {2}", x, y, z);
 		}
 	}
 }

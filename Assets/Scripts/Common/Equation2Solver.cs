@@ -3,11 +3,12 @@ using UnityEngine;
 
 namespace Common
 {
-	public class EquationSolver : MonoBehaviour
+	public class Equation2Solver : MonoBehaviour
 	{
+		[Header("Input")]
 		public Equation2 e1;
 		public Equation2 e2;
-
+		[Header("Output")]
 		public float a;
 		public float b;
 
