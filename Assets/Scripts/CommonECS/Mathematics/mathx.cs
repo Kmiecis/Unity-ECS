@@ -329,25 +329,5 @@ namespace CommonECS.Mathematics
 		{
 			return a - e < b && a + e > b;
 		}
-
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static float solve_y(float a, float b, float x)
-		{
-			return a * x + b;
-		}
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static float solve_y(float a, float b, float c, float x)
-		{
-			return a * x * x + b * x + c;
-		}
-
-		public static float2 solve_xy(float a1, float b1, float a2, float b2)
-		{
-			float x = (b2 - b1) / (a1 - a2);
-			float y = a1 * x + b1;
-			return new float2(x, y);
-		}
 	}
 }

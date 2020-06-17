@@ -43,3 +43,21 @@ The following packages were added:
   com.unity.textmeshpro@2.0.1
   com.unity.timeline@1.2.14
   com.unity.ugui@1.0.0
+
+=== Wed Jun 10 05:39:50 2020
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were added:
+  com.unity.ide.visualstudio@2.0.1
+The following packages were updated:
+  com.unity.render-pipelines.universal from version 7.3.1 to 8.0.1
+
+=== Wed Jun 10 06:34:14 2020
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.render-pipelines.universal from version 8.0.1 to 8.1.0
