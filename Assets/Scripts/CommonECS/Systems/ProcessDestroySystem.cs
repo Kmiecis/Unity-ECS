@@ -18,9 +18,11 @@ namespace CommonECS.Systems
 		{
 			var commandBuffer = m_CommandBuffer.CreateCommandBuffer().ToConcurrent();
 
-			Entities.WithAll<DestroyTag>().ForEach((Entity entity) => {
+			Entities.WithAll<DestroyTag>().ForEach((Entity entity) =>
+			{
 				commandBuffer.RemoveComponent<DestroyTag>(entity.Index, entity);
-			}).ScheduleParallel();
+			}
+			).ScheduleParallel();
 
 			m_CommandBuffer.AddJobHandleForProducer(this.Dependency);
 		}

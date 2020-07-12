@@ -11,9 +11,11 @@ namespace CommonECS.Systems
 	{
 		protected override void OnUpdate()
 		{
-			Entities.ForEach((ref Rotation rotation, in Rotate rotate) => {
-				rotation.Value = math.mul(rotation.Value, rotate.value);
-			}).ScheduleParallel();
+			Entities.ForEach((ref Rotation rotation, in Rotate rotate) =>
+			{
+				rotation.Value = math.normalizesafe(math.mul(rotation.Value, rotate.value));
+			}
+			).ScheduleParallel();
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -18,7 +18,8 @@ namespace CommonECS.Systems
 					rotate.toRotation = quaternion.LookRotation(playerInput.direction, axis.UP);
 					rotate.timeRotation = 0f;
 				}
-			}).ScheduleParallel();
+			}
+			).ScheduleParallel();
 		}
 	}
 }

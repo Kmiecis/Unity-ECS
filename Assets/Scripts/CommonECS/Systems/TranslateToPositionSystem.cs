@@ -10,7 +10,8 @@ namespace CommonECS.Systems
 		{
 			var deltaTime = Time.DeltaTime;
 
-			Entities.ForEach((ref Translation translation, in TranslateToPosition translate, in TranslateSpeed speed) => {
+			Entities.ForEach((ref Translation translation, in TranslateToPosition translate, in TranslateSpeed speed) =>
+			{
 				var currentPosition = translation.Value;
 				var targetPosition = translate.value;
 
@@ -19,7 +20,8 @@ namespace CommonECS.Systems
 				);
 
 				translation.Value += movement;
-			}).ScheduleParallel();
+			}
+			).ScheduleParallel();
 		}
 	}
 }

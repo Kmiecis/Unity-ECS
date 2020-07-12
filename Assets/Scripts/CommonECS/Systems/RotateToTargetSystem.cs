@@ -10,7 +10,8 @@ namespace CommonECS.Systems
 		{
 			var translationComponents = GetComponentDataFromEntity<Translation>(true);
 
-			Entities.ForEach((ref Rotation rotation, in Translation translation, in RotateToTarget target) => {
+			Entities.ForEach((ref Rotation rotation, in Translation translation, in RotateToTarget target) =>
+			{
 				if (translationComponents.Exists(target.value))
 				{
 					var currentPosition = translation.Value;
@@ -20,7 +21,8 @@ namespace CommonECS.Systems
 
 					rotation.Value = rotationValue;
 				}
-			}).ScheduleParallel();
+			}
+			).ScheduleParallel();
 		}
 	}
 }

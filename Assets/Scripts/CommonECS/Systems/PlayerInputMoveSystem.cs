@@ -7,9 +7,11 @@ namespace CommonECS.Systems
 	{
 		protected override void OnUpdate()
 		{
-			Entities.ForEach((ref Translate translate, in PlayerInput player) => {
+			Entities.ForEach((ref Translate translate, in PlayerInput player) =>
+			{
 				translate.value = player.direction;
-			}).ScheduleParallel();
+			}
+			).ScheduleParallel();
 		}
 	}
 }

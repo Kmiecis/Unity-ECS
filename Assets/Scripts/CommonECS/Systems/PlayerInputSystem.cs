@@ -9,36 +9,24 @@ namespace CommonECS.Systems
 	{
 		protected override void OnUpdate()
 		{
-			var moves = false;
-			var direction = float3.zero;
-			if (Input.GetKey(KeyCode.W))
+			float2 dm = float2.zero;
+			if (Input.GetKey(KeyCode.W)) dm.y += 1.0f;
+			if (Input.GetKey(KeyCode.S)) dm.y -= 1.0f;
+			if (Input.GetKey(KeyCode.D)) dm.x += 1.0f;
+			if (Input.GetKey(KeyCode.A)) dm.x -= 1.0f;
+
+			var moves = math.lengthsq(dm) > 0.0f;
+			if (moves)
 			{
-				moves = true;
-				direction.z += 1;
-			}
-			if (Input.GetKey(KeyCode.S))
-			{
-				moves = true;
-				direction.z -= 1;
-			}
-			if (Input.GetKey(KeyCode.D))
-			{
-				moves = true;
-				direction.x += 1;
-			}
-			if (Input.GetKey(KeyCode.A))
-			{
-				moves = true;
-				direction.x -= 1;
+				dm = math.normalize(dm);
 			}
 
-			if (math.lengthsq(direction) > 1)
-				direction = math.normalize(direction);
-
-			Entities.ForEach((ref PlayerInput playerInput) => {
+			Entities.ForEach((ref PlayerInput playerInput) =>
+			{
 				playerInput.moves = moves;
-				playerInput.direction = direction;
-			}).ScheduleParallel();
+				playerInput.direction = new float3(dm.x, 0.0f, dm.y);
+			}
+			).ScheduleParallel();
 		}
 	}
 }
