@@ -61,3 +61,11 @@ Update Mode: updateDependencies
 
 The following packages were updated:
   com.unity.render-pipelines.universal from version 8.0.1 to 8.1.0
+
+=== Sat Jul 11 09:23:52 2020
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.ide.visualstudio from version 2.0.1 to 2.0.2
