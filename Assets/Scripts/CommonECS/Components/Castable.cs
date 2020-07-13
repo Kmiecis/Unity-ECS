@@ -4,10 +4,9 @@ using Unity.Mathematics;
 namespace CommonECS.Components
 {
 	[GenerateAuthoringComponent]
-	public struct PlayerInput : IComponentData
+	public struct Castable : IComponentData
 	{
-		public bool moves;
-		public float3 direction;
-		public bool casts;
+		public Entity prefab;
+		public float3 offset;
 	}
 }
