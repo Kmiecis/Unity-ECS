@@ -11,11 +11,11 @@ namespace CommonECS.Systems
 		{
 			var deltaTime = Time.DeltaTime;
 
-			Entities.ForEach((ref Rotation rotation, ref RotateOverTime rotate, in RotateSpeed speed) =>
+			Entities.ForEach((ref Rotation rotation, ref RotateOverTime rotate) =>
 			{
 				if (rotate.timeRotation < 1f)
 				{
-					rotate.timeRotation = math.min(rotate.timeRotation + speed.value * deltaTime, 1f);
+					rotate.timeRotation = math.min(rotate.timeRotation + rotate.speed * deltaTime, 1f);
 					rotation.Value = math.slerp(rotate.fromRotation, rotate.toRotation, rotate.timeRotation);
 				}
 			}

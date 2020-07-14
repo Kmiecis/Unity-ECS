@@ -10,9 +10,9 @@ namespace CommonECS.Systems
 		{
 			var deltaTime = Time.DeltaTime;
 
-			Entities.ForEach((ref Translation translation, in Translate translate, in TranslateSpeed speed) =>
+			Entities.ForEach((ref Translation translation, in Translate translate) =>
 			{
-				translation.Value += translate.value * speed.value * deltaTime;
+				translation.Value += translate.value * translate.speed * deltaTime;
 			}
 			).ScheduleParallel();
 		}

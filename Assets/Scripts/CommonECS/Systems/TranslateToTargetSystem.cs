@@ -11,15 +11,15 @@ namespace CommonECS.Systems
 			var deltaTime = Time.DeltaTime;
 			var translationComponents = GetComponentDataFromEntity<Translation>(true);
 
-			Entities.ForEach((ref Translation translation, in TranslateToTarget translate, in TranslateSpeed speed) =>
+			Entities.ForEach((ref Translation translation, in TranslateToTarget translate) =>
 			{
 				if (translationComponents.Exists(translate.value))
 				{
 					var currentPosition = translation.Value;
 					var targetPosition = translationComponents[translate.value].Value;
 
-					var movement = TranslateToPosition.GetTranslationFromPositions(
-						currentPosition, targetPosition, speed.value, deltaTime
+					var movement = TranslateTools.GetTranslationFromPositions(
+						currentPosition, targetPosition, translate.speed, deltaTime
 					);
 
 					translation.Value += movement;

@@ -17,7 +17,7 @@ namespace CommonECS.Systems
 					var currentPosition = translation.Value;
 					var targetPosition = translationComponents[target.value].Value;
 
-					var rotationValue = RotateSystem.GetRotationFromPositions(currentPosition, targetPosition);
+					var rotationValue = RotateTools.GetRotationFromPositions(currentPosition, targetPosition);
 
 					rotation.Value = rotationValue;
 				}

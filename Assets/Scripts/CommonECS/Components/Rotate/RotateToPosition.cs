@@ -7,5 +7,6 @@ namespace CommonECS.Components
 	public struct RotateToPosition : IComponentData
 	{
 		public float3 value;
+		public float speed;
 	}
 }

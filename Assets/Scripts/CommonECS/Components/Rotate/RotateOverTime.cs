@@ -9,5 +9,6 @@ namespace CommonECS.Components
 		public quaternion fromRotation;
 		public quaternion toRotation;
 		public float timeRotation;
+		public float speed;
 	}
 }
