@@ -10,13 +10,13 @@ namespace CommonECS.Systems
 		{
 			var deltaTime = Time.DeltaTime;
 
-			Entities.ForEach((ref Translation translation, in TranslateToPosition translate) =>
+			Entities.ForEach((ref Translation translation, in TranslateToPosition translate, in TranslateSpeed speed) =>
 			{
 				var currentPosition = translation.Value;
 				var targetPosition = translate.value;
 
 				var movement = TranslateTools.GetTranslationFromPositions(
-					currentPosition, targetPosition, translate.speed, deltaTime
+					currentPosition, targetPosition, speed.value, deltaTime
 				);
 
 				translation.Value += movement;

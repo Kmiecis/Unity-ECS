@@ -16,7 +16,7 @@ namespace CommonECS.Systems
 
 		protected override void OnUpdate()
 		{
-			var commandBuffer = m_CommandBufferSystem.CreateCommandBuffer().ToConcurrent();
+			var commandBuffer = m_CommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
 
 			Entities.WithAll<CreatedTag>().ForEach((Entity entity) =>
 			{

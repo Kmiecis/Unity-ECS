@@ -7,6 +7,5 @@ namespace CommonECS.Components
 	public struct Translate : IComponentData
 	{
 		public float3 value;
-		public float speed;
 	}
 }

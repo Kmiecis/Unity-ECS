@@ -18,13 +18,13 @@ namespace CommonECS.Systems
 
 		protected override void OnUpdate()
 		{
-			var commandBuffer = m_CommandBufferSystem.CreateCommandBuffer().ToConcurrent();
+			var commandBuffer = m_CommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
 
 			Entities.ForEach((in LocalToWorld localToWorld, in Castable castable, in PlayerInput player) =>
 			{
 				if (player.casts)
 				{
-					var castedTranslate = new Translate { value = localToWorld.Forward, speed = 35.0f };
+					var castedTranslate = new Translate { value = localToWorld.Forward };
 					var castedRotation = new Rotation { Value = quaternion.LookRotation(localToWorld.Forward, axis.UP) };
 					var castedTranslation = new Translation { Value = localToWorld.Position + math.mul(castedRotation.Value, castable.offset) };
 					var casted = commandBuffer.Instantiate(0, castable.prefab);

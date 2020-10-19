@@ -69,3 +69,11 @@ Update Mode: updateDependencies
 
 The following packages were updated:
   com.unity.ide.visualstudio from version 2.0.1 to 2.0.2
+
+=== Fri Jul 31 13:11:44 2020
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.render-pipelines.universal from version 8.1.0 to 8.2.0

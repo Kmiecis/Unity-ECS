@@ -5,17 +5,17 @@ using Unity.Transforms;
 
 namespace CommonECS.Systems
 {
-	public class RotateOverTimeSystem : SystemBase
+	public class RotateSmoothlySystem : SystemBase
 	{
 		protected override void OnUpdate()
 		{
 			var deltaTime = Time.DeltaTime;
 
-			Entities.ForEach((ref Rotation rotation, ref RotateOverTime rotate) =>
+			Entities.ForEach((ref Rotation rotation, ref RotateSmoothly rotate, in RotateSpeed speed) =>
 			{
 				if (rotate.timeRotation < 1f)
 				{
-					rotate.timeRotation = math.min(rotate.timeRotation + rotate.speed * deltaTime, 1f);
+					rotate.timeRotation = math.min(rotate.timeRotation + speed.value * deltaTime, 1f);
 					rotation.Value = math.slerp(rotate.fromRotation, rotate.toRotation, rotate.timeRotation);
 				}
 			}

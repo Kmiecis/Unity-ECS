@@ -106,6 +106,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6357856126555835018}
   - component: {fileID: 2548692044253826925}
+  - component: {fileID: 3959994146411303626}
   m_Layer: 0
   m_Name: Throwable
   m_TagString: Untagged
@@ -144,4 +145,16 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 1
-  speed: 35
+--- !u!114 &3959994146411303626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6357856126555835022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 197b9395465c55746bf7b3ebdd732618, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  value: 35

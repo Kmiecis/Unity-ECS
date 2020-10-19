@@ -10,7 +10,7 @@ namespace CommonECS.Systems
 	{
 		protected override void OnUpdate()
 		{
-			Entities.ForEach((ref RotateOverTime rotate, in PlayerInput playerInput, in Rotation rotation) =>
+			Entities.ForEach((ref RotateSmoothly rotate, in PlayerInput playerInput, in Rotation rotation) =>
 			{
 				if (playerInput.moves)
 				{

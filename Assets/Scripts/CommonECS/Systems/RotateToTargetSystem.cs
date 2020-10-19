@@ -12,7 +12,7 @@ namespace CommonECS.Systems
 
 			Entities.ForEach((ref Rotation rotation, in Translation translation, in RotateToTarget target) =>
 			{
-				if (translationComponents.Exists(target.value))
+				if (translationComponents.HasComponent(target.value))
 				{
 					var currentPosition = translation.Value;
 					var targetPosition = translationComponents[target.value].Value;

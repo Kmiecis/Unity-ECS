@@ -2,9 +2,9 @@
 
 namespace CommonECS.Components
 {
+	[GenerateAuthoringComponent]
 	public struct RotateToTarget : IComponentData
 	{
 		public Entity value;
-		public float speed;
 	}
 }

@@ -4,11 +4,10 @@ using Unity.Mathematics;
 namespace CommonECS.Components
 {
 	[GenerateAuthoringComponent]
-	public struct RotateOverTime : IComponentData
+	public struct RotateSmoothly : IComponentData
 	{
 		public quaternion fromRotation;
 		public quaternion toRotation;
 		public float timeRotation;
-		public float speed;
 	}
 }

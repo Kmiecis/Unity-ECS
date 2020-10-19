@@ -18,7 +18,7 @@ namespace CommonECS.Systems
 
 		protected override void OnUpdate()
 		{
-			var commandBuffer = m_CommandBufferSystem.CreateCommandBuffer().ToConcurrent();
+			var commandBuffer = m_CommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
 
 			var prefab = GetSingleton<PlatformPrefab>();
 

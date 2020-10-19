@@ -28,7 +28,7 @@ namespace CommonECS
 			{
 				m_Created = true;
 
-				var commandBuffer = m_CommandBufferSystem.CreateCommandBuffer().ToConcurrent();
+				var commandBuffer = m_CommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
 
 				this.Dependency = new CreateJob()
 				{
@@ -48,7 +48,7 @@ namespace CommonECS
 			public int width;
 			public int height;
 			public PlayerPrefab playerPrefab;
-			public EntityCommandBuffer.Concurrent commandBuffer;
+			public EntityCommandBuffer.ParallelWriter commandBuffer;
 
 			public void Execute()
 			{
