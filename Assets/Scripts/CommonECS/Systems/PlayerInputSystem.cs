@@ -1,6 +1,8 @@
 ﻿using CommonECS.Components;
+using CommonECS.Mathematics;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Transforms;
 using UnityEngine;
 
 namespace CommonECS.Systems
@@ -21,15 +23,25 @@ namespace CommonECS.Systems
 				dm = math.normalize(dm);
 			}
 
-			var casts = Input.GetKey(KeyCode.Space);
+			var direction = new float3(dm.x, 0.0f, dm.y);
+			var fires = Input.GetKey(KeyCode.Space);
 
-			Entities.ForEach((ref PlayerInput playerInput) =>
-			{
-				playerInput.moves = moves;
-				playerInput.direction = new float3(dm.x, 0.0f, dm.y);
-				playerInput.casts = casts;
-			}
-			).ScheduleParallel();
+			Entities
+				.WithAll<PlayerTag>()
+				.ForEach((ref MovementInput input) =>
+				{
+					input.moves = moves;
+					input.direction = direction;
+				})
+				.Schedule();
+
+			Entities
+				.WithAll<PlayerTag>()
+				.ForEach((ref FireInput input) =>
+				{
+					input.fire = fires;
+				})
+				.Schedule();
 		}
 	}
 }

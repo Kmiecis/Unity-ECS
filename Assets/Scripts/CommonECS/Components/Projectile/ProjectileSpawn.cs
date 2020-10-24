@@ -4,9 +4,9 @@ using Unity.Mathematics;
 namespace CommonECS.Components
 {
 	[GenerateAuthoringComponent]
-	public struct Castable : IComponentData
+	public struct ProjectileSpawn : IComponentData
 	{
-		public Entity prefab;
 		public float3 offset;
+		public quaternion rotation;
 	}
 }
