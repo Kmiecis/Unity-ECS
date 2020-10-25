@@ -7,6 +7,7 @@ namespace CommonECS.Mathematics
 	{
 		public const float ROOT_2 = 1.41421356237f;
 		public const float ROOT_3 = 1.73205080757f;
+		public const float EPSILON = 0.000001f;
 
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -310,24 +311,44 @@ namespace CommonECS.Mathematics
 		}
 
 
-		public const float FLOAT_EQUALITY_EPS = 1e-5f;
-
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static bool greater(float a, float b, float e = FLOAT_EQUALITY_EPS)
+		public static bool greater(float a, float b, float e = EPSILON)
 		{
 			return a - e > b;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static bool lesser(float a, float b, float e = FLOAT_EQUALITY_EPS)
+		public static bool lesser(float a, float b, float e = EPSILON)
 		{
 			return a + e < b;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static bool equals(float a, float b, float e = FLOAT_EQUALITY_EPS)
+		public static bool equals(float a, float b, float e = EPSILON)
 		{
 			return a - e < b && a + e > b;
+		}
+
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static quaternion rotate_towards(quaternion a, quaternion b, float radians)
+		{
+			float ab_radians = angle_radians(a, b);
+			if (ab_radians == 0.0f) return b;
+			return math.slerp(a, b, math.min(1.0f, radians / ab_radians));
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float angle_radians(quaternion a, quaternion b)
+		{
+			var dot = math.dot(a, b);
+			return (dot > 1.0f - EPSILON) ? 0.0f : math.acos(math.min(math.abs(dot), 1.0f)) * 2.0f;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float angle(quaternion a, quaternion b)
+		{
+			return math.degrees(angle_radians(a, b));
 		}
 	}
 }

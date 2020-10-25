@@ -35,7 +35,7 @@ namespace CommonECS.Systems
 					{
 						var firedProjectile = commandBuffer.Instantiate(entityInQueryIndex, projectilePrefab.value);
 
-						var firedTranslateComponent = new Translate { value = localToWorld.Forward };
+						var firedTranslateComponent = new Translate { direction = localToWorld.Forward };
 						var firedTranslateSpeedComponent = new TranslateSpeed { value = fireSpeed.value };
 						var firedTranslationComponent = new Translation { Value = math.transform(localToWorld.Value, projectileSpawn.offset) };
 						var firedRotationComponent = new Rotation { Value = quaternion.LookRotation(localToWorld.Forward, math.up()) };

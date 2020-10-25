@@ -1,5 +1,6 @@
 ﻿using CommonECS.Components;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Transforms;
 
 namespace CommonECS.Systems
@@ -10,18 +11,30 @@ namespace CommonECS.Systems
 		{
 			var deltaTime = Time.DeltaTime;
 
-			Entities.ForEach((ref Translation translation, in TranslateToPosition translate, in TranslateSpeed speed) =>
-			{
-				var currentPosition = translation.Value;
-				var targetPosition = translate.value;
+			Entities
+				.ForEach((ref Translation translation, in TranslateToPosition translate, in TranslateSpeed speed) =>
+				{
+					var currentPosition = translation.Value;
+					var targetPosition = translate.value;
 
-				var movement = TranslateTools.GetTranslationFromPositions(
-					currentPosition, targetPosition, speed.value, deltaTime
-				);
+					var direction = targetPosition - currentPosition;
 
-				translation.Value += movement;
-			}
-			).ScheduleParallel();
+					if (math.lengthsq(direction) > 0)
+						direction = math.normalize(direction);
+
+					var movement = direction * speed.value * deltaTime;
+
+					var newPosition = currentPosition + movement;
+
+					var da = newPosition - currentPosition;
+					var db = targetPosition - newPosition;
+					var hasReached = math.dot(da, db) < 0;
+					if (hasReached)
+						movement = targetPosition - currentPosition;
+
+					translation.Value += movement;
+				}
+				).ScheduleParallel();
 		}
 	}
 }

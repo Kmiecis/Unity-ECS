@@ -12,7 +12,7 @@ namespace CommonECS.Systems
 
 			Entities.ForEach((ref Translation translation, in Translate translate, in TranslateSpeed speed) =>
 			{
-				translation.Value += translate.value * speed.value * deltaTime;
+				translation.Value += translate.direction * speed.value * deltaTime;
 			}
 			).ScheduleParallel();
 		}

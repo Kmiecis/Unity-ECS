@@ -4,8 +4,8 @@ using Unity.Mathematics;
 namespace CommonECS.Components
 {
 	[GenerateAuthoringComponent]
-	public struct RotateToPosition : IComponentData
+	public struct RotateToRotation : IComponentData
 	{
-		public float3 value;
+		public quaternion rotation;
 	}
 }

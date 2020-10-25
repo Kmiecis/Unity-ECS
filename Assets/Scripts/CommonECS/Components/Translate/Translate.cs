@@ -6,6 +6,6 @@ namespace CommonECS.Components
 	[GenerateAuthoringComponent]
 	public struct Translate : IComponentData
 	{
-		public float3 value;
+		public float3 direction;
 	}
 }

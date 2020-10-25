@@ -202,10 +202,9 @@ GameObject:
   - component: {fileID: 3978099731191611809}
   - component: {fileID: 2053027675639996017}
   - component: {fileID: 2035417941}
-  - component: {fileID: 8482145575260247175}
   - component: {fileID: 8705161705706692271}
   - component: {fileID: 3598703995603830858}
-  - component: {fileID: 2508809633592957106}
+  - component: {fileID: 1270730794191952180}
   - component: {fileID: 8028421746890339997}
   - component: {fileID: 8517745297426304124}
   - component: {fileID: 6106003172260915828}
@@ -261,23 +260,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConversionMode: 0
---- !u!114 &8482145575260247175
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3978099731191611808}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b57ef7fbeeee3b4aa69d37b91c949d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moves: 0
-  direction:
-    x: 0
-    y: 0
-    z: 0
 --- !u!114 &8705161705706692271
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -290,7 +272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caa796aebf8dff1498f84fc65cd18505, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  value:
+  direction:
     x: 0
     y: 0
     z: 0
@@ -307,7 +289,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   value: 5
---- !u!114 &2508809633592957106
+--- !u!114 &1270730794191952180
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -316,22 +298,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 3978099731191611808}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a89d6254d2e96c48b7b26298e1f4d87, type: 3}
+  m_Script: {fileID: 11500000, guid: 7ee39933beb19b241ac079cb574882c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fromRotation:
+  rotation:
     value:
       x: 0
       y: 0
       z: 0
       w: 0
-  toRotation:
-    value:
-      x: 0
-      y: 0
-      z: 0
-      w: 0
-  timeRotation: 1
 --- !u!114 &8028421746890339997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -344,7 +319,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f391334adee66c64eb3c45ea86cbb456, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  value: 15
+  value: 720
 --- !u!114 &8517745297426304124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -396,7 +371,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00116916598704b4e83f37415d856a97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  value: 35
+  value: 50
 --- !u!114 &9037464784947198301
 MonoBehaviour:
   m_ObjectHideFlags: 0

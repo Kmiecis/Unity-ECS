@@ -4526,7 +4526,7 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1120374182236212223}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &4899965545269619660
+--- !u!1001 &7104334952065676122
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -4593,6 +4593,5 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 287348361, guid: b661e2c60ce54b949b6340004e806e48, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b661e2c60ce54b949b6340004e806e48, type: 3}
