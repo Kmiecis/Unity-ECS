@@ -29,12 +29,12 @@ namespace CommonECS.Systems
 
 			Entities
 				.WithAll<PlayerTag>()
-				.ForEach((ref Translate translate, ref RotateToRotation rotate, ref FireInput fireInput, in Rotation rotation) =>
+				.ForEach((ref Translate translate, ref RotateToRotation rotate, ref ParticlesOnInvokeEffect particlesEffect, in Rotation rotation) =>
 				{
 					var direction = new float3(dm.x, 0.0f, dm.y);
 					translate.direction = direction;
 					rotate.rotation = moves ? quaternion.LookRotation(direction, math.up()) : rotation.Value;
-					fireInput.fire = fires;
+					particlesEffect.invoke = fires;
 				})
 				.Schedule();
 		}
