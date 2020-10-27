@@ -13,6 +13,9 @@ GameObject:
   - component: {fileID: 5364164695056720719}
   - component: {fileID: 5364164695056720704}
   - component: {fileID: 5364164695056720705}
+  - component: {fileID: 7911800473783592266}
+  - component: {fileID: 4557659707292531092}
+  - component: {fileID: -6521044141419881458}
   m_Layer: 0
   m_Name: ParticleEffect
   m_TagString: Untagged
@@ -47,7 +50,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   particle: {fileID: 3284944993059774436, guid: 970e33cac3871e04f89fed620608fd99, type: 3}
-  count: 10
+  count: 1000
+  offsetMin:
+    x: 0
+    y: 0
+    z: 0
+  offsetMax:
+    x: 0
+    y: 1
+    z: 0
+  rotationMin:
+    x: 0
+    y: 0
+    z: 0
+  rotationMax:
+    x: 0
+    y: 0
+    z: 360
+  scaleMin: 0.15
+  scaleMax: 0.35
+  directionMin:
+    x: -0.707
+    y: 0
+    z: 0.707
+  directionMax:
+    x: 0.707
+    y: 0
+    z: 0.707
+  speedMin: 1
+  speedMax: 5
+  lifetimeMin: 1
+  lifetimeMax: 5
 --- !u!114 &5364164695056720719
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96,3 +129,57 @@ MonoBehaviour:
     x: 0.707
     y: 0
     z: 0.707
+--- !u!114 &7911800473783592266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5364164695056720708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32ef2b2c12dad5d4a86450cd270a9fc7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  min:
+    x: 0
+    y: 0
+    z: 0
+  max:
+    x: 0
+    y: 0
+    z: 360
+--- !u!114 &4557659707292531092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5364164695056720708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d98f26a6a46ba14bb22c0ed11ced8da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  min: 0.15
+  max: 0.35
+--- !u!114 &-6521044141419881458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5364164695056720708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6d4e7cf2a7d65a4b8cf3cc4d8c5da23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  min:
+    x: 0
+    y: 0
+    z: 0
+  max:
+    x: 0
+    y: 1
+    z: 0

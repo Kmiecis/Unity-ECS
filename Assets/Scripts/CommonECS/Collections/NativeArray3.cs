@@ -59,6 +59,7 @@ namespace CommonECS.Collections
 			set { this[xyz.x, xyz.y, xyz.z] = value; }
 		}
 
+		[WriteAccessRequired]
 		public void Dispose()
 		{
 			m_Array.Dispose();
