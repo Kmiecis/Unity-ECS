@@ -24,7 +24,7 @@ namespace CommonECS.Systems
 				{
 					lifetime.value -= deltaTime;
 
-					if (lifetime.value < 0.0f)
+					if (lifetime.value <= 0.0f)
 					{
 						commandBuffer.AddComponent(entityInQueryIndex, entity, new DestroyTag());
 					}

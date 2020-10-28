@@ -40,6 +40,8 @@ namespace CommonECS.Systems
 						var hasRandomDirection = HasComponent<ParticleEffectRandomDirection>(entity);
 						var hasRandomSpeed = HasComponent<ParticleEffectRandomSpeed>(entity);
 						var hasRandomLifetime = HasComponent<ParticleEffectRandomLifetime>(entity);
+						var hasSizeOverLifetime = HasComponent<ParticleEffectSizeOverLifetime>(entity);
+						var hasColorOverLifetime = HasComponent<ParticleEffectColorOverLifetime>(entity);
 
 						if (hasRandomOffset)
 						{
@@ -61,8 +63,7 @@ namespace CommonECS.Systems
 						{
 							var particleEffectRandomScale = GetComponent<ParticleEffectRandomScale>(entity);
 							var randomScale = random.NextFloat(particleEffectRandomScale.min, particleEffectRandomScale.max);
-							commandBuffer.AddComponent(entityInQueryIndex, newParticleEntity, new Scale { Value = randomScale });
-							commandBuffer.RemoveComponent<NonUniformScale>(entityInQueryIndex, newParticleEntity);
+							commandBuffer.AddComponent(entityInQueryIndex, newParticleEntity, new NonUniformScale { Value = randomScale });
 						}
 
 						if (hasRandomDirection)
@@ -86,6 +87,22 @@ namespace CommonECS.Systems
 							var randomLifetime = random.NextFloat(particleEffectRandomLifetime.min, particleEffectRandomLifetime.max);
 							commandBuffer.AddComponent(entityInQueryIndex, newParticleEntity, new Lifetime { value = randomLifetime });
 							commandBuffer.AddComponent(entityInQueryIndex, newParticleEntity, new Livetime());
+						}
+
+						if (hasSizeOverLifetime)
+						{
+							var particleEffectSizeOverLifetime = GetComponent<ParticleEffectSizeOverLifetime>(entity);
+							var curveRef = particleEffectSizeOverLifetime.curveRef;
+							commandBuffer.AddComponent(entityInQueryIndex, newParticleEntity, new SizeOverLifetime { curveRef = curveRef });
+							commandBuffer.AddComponent(entityInQueryIndex, newParticleEntity, new NonUniformScale { Value = curveRef.Value.Evaluate(0.0f) });
+						}
+
+						if (hasColorOverLifetime)
+						{
+							var particleEffectColorOverLifetime = GetComponent<ParticleEffectColorOverLifetime>(entity);
+							var gradientsRef = particleEffectColorOverLifetime.gradientsRef;
+							commandBuffer.AddComponent(entityInQueryIndex, newParticleEntity, new ColorOverLifetime { gradientsRef = gradientsRef });
+							commandBuffer.AddComponent(entityInQueryIndex, newParticleEntity, new MaterialBaseColor { value = gradientsRef.Value.Evaluate(0.0f) });
 						}
 					}
 					randomArray[0] = random;

@@ -1709,25 +1709,6 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
---- !u!1 &1000577152 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3978099731191611808, guid: b661e2c60ce54b949b6340004e806e48, type: 3}
-  m_PrefabInstance: {fileID: 7104334952065676122}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1000577153
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000577152}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d355df76cc1ede46bda108215fdeacc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  invoke: 0
-  effect: {fileID: 5364164695056720708, guid: 9e1ef3646cef9d347b007546bbcff060, type: 3}
 --- !u!1001 &1093025679
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3918,10 +3899,6 @@ PrefabInstance:
     - target: {fileID: 3978099731191611808, guid: b661e2c60ce54b949b6340004e806e48, type: 3}
       propertyPath: m_Name
       value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 3978099731191611808, guid: b661e2c60ce54b949b6340004e806e48, type: 3}
-      propertyPath: m_Icon
-      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3978099731191611809, guid: b661e2c60ce54b949b6340004e806e48, type: 3}
       propertyPath: m_LocalPosition.x
