@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.unity.animation": "0.7.1-preview.2",
     "com.unity.entities": "0.14.0-preview.19",
     "com.unity.render-pipelines.universal": "8.2.0",
     "com.unity.rendering.hybrid": "0.8.0-preview.19",
