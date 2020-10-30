@@ -5,17 +5,30 @@ using Unity.Transforms;
 
 namespace CommonECS.Systems
 {
-	public class TranslateToPositionSystem : SystemBase
+	public class ApproachSystem : SystemBase
 	{
 		protected override void OnUpdate()
 		{
+			Entities
+				.ForEach((ref ApproachPosition position, ref ApproachTarget target) =>
+				{
+					var entity = target.value;
+					if (HasComponent<Translation>(entity))
+					{
+						var translation = GetComponent<Translation>(entity);
+
+						position.value = translation.Value;
+					}
+				})
+				.ScheduleParallel();
+
 			var deltaTime = Time.DeltaTime;
 
 			Entities
-				.ForEach((ref Translation translation, in TranslateToPosition translate, in TranslateSpeed speed) =>
+				.ForEach((ref Translation translation, ref ApproachCheck check, in ApproachPosition position, in ApproachSpeed speed, in ApproachDistance distance) =>
 				{
 					var currentPosition = translation.Value;
-					var targetPosition = translate.value;
+					var targetPosition = position.value;
 
 					var direction = targetPosition - currentPosition;
 
@@ -28,13 +41,15 @@ namespace CommonECS.Systems
 
 					var da = newPosition - currentPosition;
 					var db = targetPosition - newPosition;
+
 					var hasReached = math.dot(da, db) < 0;
 					if (hasReached)
 						movement = targetPosition - currentPosition;
 
 					translation.Value += movement;
-				}
-				).ScheduleParallel();
+					check.value = hasReached;
+				})
+				.ScheduleParallel();
 		}
 	}
 }

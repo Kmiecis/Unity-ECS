@@ -3,9 +3,8 @@
 namespace CommonECS.Components
 {
 	[GenerateAuthoringComponent]
-	public struct ParticleEffect : IComponentData
+	public struct ApproachCheck : IComponentData
 	{
-		public Entity particle;
-		public int count;
+		public bool value;
 	}
 }

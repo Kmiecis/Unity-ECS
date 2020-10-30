@@ -6,7 +6,7 @@ using Unity.Transforms;
 
 namespace CommonECS.Systems
 {
-	public class ParticlesEffectsSystem : SystemBase
+	public class ParticlesBurstEffectsSystem : SystemBase
 	{
 		private EntityCommandBufferSystem m_CommandBuffer;
 		private NativeArray<Random> m_RandomArray;
@@ -25,60 +25,39 @@ namespace CommonECS.Systems
 			var randomArray = m_RandomArray;
 
 			Entities
-				.ForEach((int entityInQueryIndex, Entity entity, in ParticleEffect particleEffect, in Translation translation, in Rotation rotation) =>
+				.ForEach((int entityInQueryIndex, Entity entity, in ParticleBurstEffect burstEffect, in Translation translation, in Rotation rotation) =>
 				{
 					var random = randomArray[0];
 
-					for (int i = 0; i < particleEffect.count; ++i)
+					for (int i = 0; i < burstEffect.count; ++i)
 					{
-						var newParticleEntity = commandBuffer.Instantiate(entityInQueryIndex, particleEffect.particle);
+						var newParticleEntity = commandBuffer.Instantiate(entityInQueryIndex, burstEffect.particle);
 						commandBuffer.SetComponent(entityInQueryIndex, newParticleEntity, translation);
 
-						var hasRandomOffset = HasComponent<ParticleEffectRandomOffset>(entity);
+						var hasBoxEmission = HasComponent<ParticleEffectBoxEmission>(entity);
+						var hasSphereEmission = HasComponent<ParticleEffectSphereEmission>(entity);
+						var hasRandomLifetime = HasComponent<ParticleEffectRandomLifetime>(entity);
+						var hasRandomSize = HasComponent<ParticleEffectRandomSize>(entity);
 						var hasRandomRotation = HasComponent<ParticleEffectRandomRotation>(entity);
-						var hasRandomScale = HasComponent<ParticleEffectRandomScale>(entity);
 						var hasRandomDirection = HasComponent<ParticleEffectRandomDirection>(entity);
 						var hasRandomSpeed = HasComponent<ParticleEffectRandomSpeed>(entity);
-						var hasRandomLifetime = HasComponent<ParticleEffectRandomLifetime>(entity);
 						var hasSizeOverLifetime = HasComponent<ParticleEffectSizeOverLifetime>(entity);
 						var hasColorOverLifetime = HasComponent<ParticleEffectColorOverLifetime>(entity);
 
-						if (hasRandomOffset)
+						if (hasBoxEmission)
 						{
-							var particleEffectRandomOffset = GetComponent<ParticleEffectRandomOffset>(entity);
-							var randomOffset = random.NextFloat3(particleEffectRandomOffset.min, particleEffectRandomOffset.max);
+							var particleEffectBoxEmission = GetComponent<ParticleEffectBoxEmission>(entity);
+							var randomOffset = random.NextFloat3(particleEffectBoxEmission.min, particleEffectBoxEmission.max);
 							randomOffset += translation.Value;
 							commandBuffer.SetComponent(entityInQueryIndex, newParticleEntity, new Translation { Value = randomOffset });
 						}
 
-						if (hasRandomRotation)
+						if (hasSphereEmission)
 						{
-							var particleEffectRandomRotation = GetComponent<ParticleEffectRandomRotation>(entity);
-							var randomRotation = quaternion.EulerXYZ(random.NextFloat3(particleEffectRandomRotation.min, particleEffectRandomRotation.max));
-							randomRotation = math.mul(rotation.Value, randomRotation);
-							commandBuffer.AddComponent(entityInQueryIndex, newParticleEntity, new Rotation { Value = randomRotation });
-						}
-
-						if (hasRandomScale)
-						{
-							var particleEffectRandomScale = GetComponent<ParticleEffectRandomScale>(entity);
-							var randomScale = random.NextFloat(particleEffectRandomScale.min, particleEffectRandomScale.max);
-							commandBuffer.AddComponent(entityInQueryIndex, newParticleEntity, new NonUniformScale { Value = randomScale });
-						}
-
-						if (hasRandomDirection)
-						{
-							var particleEffectRandomDirection = GetComponent<ParticleEffectRandomDirection>(entity);
-							var randomDirection = random.NextFloat3(particleEffectRandomDirection.min, particleEffectRandomDirection.max);
-							randomDirection = math.mul(rotation.Value, randomDirection);
-							commandBuffer.AddComponent(entityInQueryIndex, newParticleEntity, new Translate { direction = randomDirection });
-						}
-
-						if (hasRandomSpeed)
-						{
-							var particleEffectRandomSpeed = GetComponent<ParticleEffectRandomSpeed>(entity);
-							var randomSpeed = random.NextFloat(particleEffectRandomSpeed.min, particleEffectRandomSpeed.max);
-							commandBuffer.AddComponent(entityInQueryIndex, newParticleEntity, new TranslateSpeed { value = randomSpeed });
+							var particleEffectSphereEmission = GetComponent<ParticleEffectSphereEmission>(entity);
+							var randomOffset = random.NextFloat(particleEffectSphereEmission.min, particleEffectSphereEmission.max) * random.NextFloat3Direction();
+							randomOffset += translation.Value;
+							commandBuffer.SetComponent(entityInQueryIndex, newParticleEntity, new Translation { Value = randomOffset });
 						}
 
 						if (hasRandomLifetime)
@@ -89,12 +68,42 @@ namespace CommonECS.Systems
 							commandBuffer.AddComponent(entityInQueryIndex, newParticleEntity, new Livetime());
 						}
 
+						if (hasRandomSize)
+						{
+							var particleEffectRandomSize = GetComponent<ParticleEffectRandomSize>(entity);
+							var randomSize = random.NextFloat(particleEffectRandomSize.min, particleEffectRandomSize.max);
+							commandBuffer.AddComponent(entityInQueryIndex, newParticleEntity, new SizeReference { value = randomSize });
+							commandBuffer.AddComponent(entityInQueryIndex, newParticleEntity, new NonUniformScale { Value = randomSize });
+						}
+
+						if (hasRandomRotation)
+						{
+							var particleEffectRandomRotation = GetComponent<ParticleEffectRandomRotation>(entity);
+							var randomRotation = quaternion.EulerXYZ(random.NextFloat3(particleEffectRandomRotation.min, particleEffectRandomRotation.max));
+							randomRotation = math.mul(rotation.Value, randomRotation);
+							commandBuffer.AddComponent(entityInQueryIndex, newParticleEntity, new Rotation { Value = randomRotation });
+						}
+						
+						if (hasRandomDirection)
+						{
+							var particleEffectRandomDirection = GetComponent<ParticleEffectRandomDirection>(entity);
+							var randomDirection = math.normalizesafe(random.NextFloat3(particleEffectRandomDirection.min, particleEffectRandomDirection.max));
+							randomDirection = math.mul(rotation.Value, randomDirection);
+							commandBuffer.AddComponent(entityInQueryIndex, newParticleEntity, new TranslateDirection { value = randomDirection });
+						}
+
+						if (hasRandomSpeed)
+						{
+							var particleEffectRandomSpeed = GetComponent<ParticleEffectRandomSpeed>(entity);
+							var randomSpeed = random.NextFloat(particleEffectRandomSpeed.min, particleEffectRandomSpeed.max);
+							commandBuffer.AddComponent(entityInQueryIndex, newParticleEntity, new TranslateSpeed { value = randomSpeed });
+						}
+
 						if (hasSizeOverLifetime)
 						{
 							var particleEffectSizeOverLifetime = GetComponent<ParticleEffectSizeOverLifetime>(entity);
 							var curveRef = particleEffectSizeOverLifetime.curveRef;
 							commandBuffer.AddComponent(entityInQueryIndex, newParticleEntity, new SizeOverLifetime { curveRef = curveRef });
-							commandBuffer.AddComponent(entityInQueryIndex, newParticleEntity, new NonUniformScale { Value = curveRef.Value.Evaluate(0.0f) });
 						}
 
 						if (hasColorOverLifetime)

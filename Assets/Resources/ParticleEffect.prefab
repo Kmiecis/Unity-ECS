@@ -10,11 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 5364164695056720706}
   - component: {fileID: 5364164695056720707}
-  - component: {fileID: 5364164695056720719}
-  - component: {fileID: 5364164695056720704}
-  - component: {fileID: 5364164695056720705}
+  - component: {fileID: 282519521004400658}
   - component: {fileID: 7911800473783592266}
-  - component: {fileID: -6521044141419881458}
+  - component: {fileID: 4737542232201345969}
+  - component: {fileID: 5364164695056720704}
   - component: {fileID: 2002375159955451447}
   - component: {fileID: -3346389195111284922}
   m_Layer: 0
@@ -52,7 +51,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   particle: {fileID: 3284944993059774436, guid: 970e33cac3871e04f89fed620608fd99, type: 3}
   count: 5
---- !u!114 &5364164695056720719
+--- !u!114 &282519521004400658
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -61,45 +60,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 5364164695056720708}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c59d186bc6f202a46a02b2e02a3e2745, type: 3}
+  m_Script: {fileID: 11500000, guid: e5a19cc47c1bcc448a894e51e992c042, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  min: 1
-  max: 5
---- !u!114 &5364164695056720704
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5364164695056720708}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aac0012ca53ac1646b2e607fbe499913, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  min: 1
-  max: 5
---- !u!114 &5364164695056720705
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5364164695056720708}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07d2c7e5c0d7bfc408f1576b596a9db6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  min:
-    x: -0.707
-    y: 0
-    z: 0.707
-  max:
-    x: 0.707
-    y: 0
-    z: 0.707
+  min: 3
+  max: 3
 --- !u!114 &7911800473783592266
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -120,7 +85,7 @@ MonoBehaviour:
     x: 360
     y: 360
     z: 360
---- !u!114 &-6521044141419881458
+--- !u!114 &4737542232201345969
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -129,17 +94,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 5364164695056720708}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6d4e7cf2a7d65a4b8cf3cc4d8c5da23, type: 3}
+  m_Script: {fileID: 11500000, guid: 1d98f26a6a46ba14bb22c0ed11ced8da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  min:
-    x: 0
-    y: 0
-    z: 1
-  max:
-    x: 0
-    y: 1
-    z: 1
+  min: 0.15
+  max: 0.35
+--- !u!114 &5364164695056720704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5364164695056720708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aac0012ca53ac1646b2e607fbe499913, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  min: 1
+  max: 5
 --- !u!114 &2002375159955451447
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -202,29 +175,29 @@ MonoBehaviour:
   gradient:
     serializedVersion: 2
     key0: {r: 1, g: 1, b: 1, a: 0}
-    key1: {r: 1, g: 1, b: 0, a: 1}
-    key2: {r: 1, g: 0, b: 0, a: 1}
-    key3: {r: 1, g: 1, b: 1, a: 0}
+    key1: {r: 1, g: 0, b: 0, a: 1}
+    key2: {r: 0, g: 1, b: 0.00012731552, a: 1}
+    key3: {r: 0, g: 0.04299283, b: 1, a: 0}
     key4: {r: 1, g: 1, b: 1, a: 0}
     key5: {r: 0, g: 0, b: 0, a: 0}
     key6: {r: 0, g: 0, b: 0, a: 0}
     key7: {r: 0, g: 0, b: 0, a: 0}
     ctime0: 0
     ctime1: 19661
-    ctime2: 45875
-    ctime3: 65535
+    ctime2: 32768
+    ctime3: 45875
     ctime4: 65535
     ctime5: 0
     ctime6: 0
     ctime7: 0
     atime0: 0
-    atime1: 13107
-    atime2: 52428
+    atime1: 9830
+    atime2: 55705
     atime3: 65535
     atime4: 0
     atime5: 0
     atime6: 0
     atime7: 0
     m_Mode: 0
-    m_NumColorKeys: 4
+    m_NumColorKeys: 5
     m_NumAlphaKeys: 4

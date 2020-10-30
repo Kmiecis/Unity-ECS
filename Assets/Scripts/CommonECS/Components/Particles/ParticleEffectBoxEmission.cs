@@ -4,8 +4,9 @@ using Unity.Mathematics;
 namespace CommonECS.Components
 {
 	[GenerateAuthoringComponent]
-	public struct TranslateToPosition : IComponentData
+	public struct ParticleEffectBoxEmission : IComponentData
 	{
-		public float3 value;
+		public float3 min;
+		public float3 max;
 	}
 }

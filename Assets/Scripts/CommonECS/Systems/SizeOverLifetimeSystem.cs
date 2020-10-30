@@ -9,13 +9,12 @@ namespace CommonECS.Components
 		protected override void OnUpdate()
 		{
 			Entities
-				.WithoutBurst()
-				.ForEach((ref NonUniformScale scale, in SizeOverLifetime sizeOverLifetime, in Lifetime lifetime, in Livetime livetime) =>
+				.ForEach((ref NonUniformScale scale, in SizeReference sizeReference, in SizeOverLifetime sizeOverLifetime, in Lifetime lifetime, in Livetime livetime) =>
 				{
 					var lifetimeNormalized = math.min((livetime.value) / (livetime.value + lifetime.value), 1.0f);
 					ref var sizeOverLifetimeCurve = ref sizeOverLifetime.curveRef.Value;
-					ref var newScale = ref sizeOverLifetimeCurve.Evaluate(lifetimeNormalized);
-					scale.Value = newScale;
+					ref var sizeEvaluated = ref sizeOverLifetimeCurve.Evaluate(lifetimeNormalized);
+					scale.Value = sizeEvaluated * sizeReference.value;
 				})
 				.ScheduleParallel();
 		}

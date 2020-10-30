@@ -4,8 +4,8 @@ using Unity.Mathematics;
 namespace CommonECS.Components
 {
 	[GenerateAuthoringComponent]
-	public struct Translate : IComponentData
+	public struct TranslateDirection : IComponentData
 	{
-		public float3 direction;
+		public float3 value;
 	}
 }
