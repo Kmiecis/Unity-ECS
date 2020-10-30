@@ -3,7 +3,7 @@ using Unity.Entities;
 
 namespace CommonECS.Components
 {
-	public struct ParticleEffectColorOverLifetime : IComponentData
+	public struct ParticleColorOverLifetime : IComponentData
 	{
 		public BlobAssetReference<Gradients> gradientsRef;
 	}

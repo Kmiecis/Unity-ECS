@@ -3,8 +3,7 @@
 namespace CommonECS.Components
 {
 	[GenerateAuthoringComponent]
-	public struct ParticlesOnCreationEffect : IComponentData
+	public struct ParticlesOnDestructionTag : IComponentData
 	{
-		public Entity effect;
 	}
 }

@@ -4,7 +4,7 @@ using Unity.Mathematics;
 namespace CommonECS.Components
 {
 	[GenerateAuthoringComponent]
-	public struct ParticleEffectRandomRotation : IComponentData
+	public struct ParticleRandomRotation : IComponentData
 	{
 		public float3 min;
 		public float3 max;

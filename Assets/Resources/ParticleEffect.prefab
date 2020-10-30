@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5364164695056720706}
-  - component: {fileID: 5364164695056720707}
+  - component: {fileID: 1191389494174560681}
   - component: {fileID: 282519521004400658}
   - component: {fileID: 7911800473783592266}
   - component: {fileID: 4737542232201345969}
@@ -37,7 +37,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5364164695056720707
+--- !u!114 &1191389494174560681
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -46,11 +46,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5364164695056720708}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef231e98feb60d44eadbc7fd37f8b041, type: 3}
+  m_Script: {fileID: 11500000, guid: e23ec1567bb134547817bdbfcbbad116, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  particle: {fileID: 3284944993059774436, guid: 970e33cac3871e04f89fed620608fd99, type: 3}
-  count: 5
+  value: {fileID: 3284944993059774436, guid: 970e33cac3871e04f89fed620608fd99, type: 3}
 --- !u!114 &282519521004400658
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -176,7 +175,7 @@ MonoBehaviour:
     serializedVersion: 2
     key0: {r: 1, g: 1, b: 1, a: 0}
     key1: {r: 1, g: 0, b: 0, a: 1}
-    key2: {r: 0, g: 1, b: 0.00012731552, a: 1}
+    key2: {r: 1, g: 1, b: 0, a: 1}
     key3: {r: 0, g: 0.04299283, b: 1, a: 0}
     key4: {r: 1, g: 1, b: 1, a: 0}
     key5: {r: 0, g: 0, b: 0, a: 0}

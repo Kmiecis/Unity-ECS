@@ -3,7 +3,7 @@ using Unity.Entities;
 
 namespace CommonECS.Components
 {
-	public struct ParticleEffectSizeOverLifetime : IComponentData
+	public struct ParticleSizeOverLifetime : IComponentData
 	{
 		public BlobAssetReference<AnimationsCurve> curveRef;
 	}

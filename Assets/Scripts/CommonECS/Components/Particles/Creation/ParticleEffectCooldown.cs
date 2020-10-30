@@ -3,8 +3,8 @@
 namespace CommonECS.Components
 {
 	[GenerateAuthoringComponent]
-	public struct ParticlesOnDestructionEffect : IComponentData
+	public struct ParticleEffectCooldown : IComponentData
 	{
-		public Entity effect;
+		public float value;
 	}
 }

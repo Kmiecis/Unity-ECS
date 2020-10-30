@@ -3,7 +3,7 @@
 namespace CommonECS.Components
 {
 	[GenerateAuthoringComponent]
-	public struct ParticleEffectRandomLifetime : IComponentData
+	public struct ParticleRandomSize : IComponentData
 	{
 		public float min;
 		public float max;

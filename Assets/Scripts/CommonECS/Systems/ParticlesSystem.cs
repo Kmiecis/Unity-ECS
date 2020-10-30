@@ -17,39 +17,73 @@ namespace CommonECS.Systems
 		protected override void OnUpdate()
 		{
 			var commandBuffer = m_CommandBuffer.CreateCommandBuffer().AsParallelWriter();
-			
-			Entities
-				.ForEach((int entityInQueryIndex, Entity entity, in ParticlesOnCreationEffect particlesEffect, in Translation translation, in Rotation rotation) =>
-				{
-					var newEffectEntity = commandBuffer.Instantiate(entityInQueryIndex, particlesEffect.effect);
-					commandBuffer.SetComponent(entityInQueryIndex, newEffectEntity, translation);
-					commandBuffer.SetComponent(entityInQueryIndex, newEffectEntity, rotation);
-					commandBuffer.RemoveComponent<ParticlesOnCreationEffect>(entityInQueryIndex, entity);
-				})
-				.ScheduleParallel();
 
 			Entities
-				.WithAll<DestroyTag>()
-				.ForEach((int entityInQueryIndex, Entity entity, in ParticlesOnDestructionEffect particlesEffect, in Translation translation, in Rotation rotation) =>
+				.WithAll<ParticlesOnCreationTag>()
+				.ForEach((int entityInQueryIndex, Entity entity, in ParticleEffectCount count, in ParticleEffectPrefab prefab, in Translation translation, in Rotation rotation) =>
 				{
-					var newEffectEntity = commandBuffer.Instantiate(entityInQueryIndex, particlesEffect.effect);
-					commandBuffer.SetComponent(entityInQueryIndex, newEffectEntity, translation);
-					commandBuffer.SetComponent(entityInQueryIndex, newEffectEntity, rotation);
-				})
-				.ScheduleParallel();
-
-			Entities
-				.ForEach((int entityInQueryIndex, Entity entity, in ParticlesOnInvokeEffect particlesEffect, in Translation translation, in Rotation rotation) =>
-				{
-					if (particlesEffect.invoke)
+					for (int i = 0; i < count.value; ++i)
 					{
-						var newEffectEntity = commandBuffer.Instantiate(entityInQueryIndex, particlesEffect.effect);
-						commandBuffer.SetComponent(entityInQueryIndex, newEffectEntity, translation);
-						commandBuffer.SetComponent(entityInQueryIndex, newEffectEntity, rotation);
+						var newEffect = commandBuffer.Instantiate(entityInQueryIndex, prefab.value);
+						commandBuffer.SetComponent(entityInQueryIndex, newEffect, translation);
+						commandBuffer.SetComponent(entityInQueryIndex, newEffect, rotation);
+					}
+					
+					commandBuffer.RemoveComponent<ParticlesOnCreationTag>(entityInQueryIndex, entity);
+					commandBuffer.RemoveComponent<ParticleEffectPrefab>(entityInQueryIndex, entity);
+					commandBuffer.RemoveComponent<ParticleEffectCount>(entityInQueryIndex, entity);
+				})
+				.ScheduleParallel();
+
+			Entities
+				.WithAll<ParticlesOnDestructionTag, DestroyTag>()
+				.ForEach((int entityInQueryIndex, Entity entity, in ParticleEffectCount count, in ParticleEffectPrefab prefab, in Translation translation, in Rotation rotation) =>
+				{
+					for (int i = 0; i < count.value; ++i)
+					{
+						var newEffect = commandBuffer.Instantiate(entityInQueryIndex, prefab.value);
+						commandBuffer.SetComponent(entityInQueryIndex, newEffect, translation);
+						commandBuffer.SetComponent(entityInQueryIndex, newEffect, rotation);
 					}
 				})
 				.ScheduleParallel();
 
+			Entities
+				.ForEach((int entityInQueryIndex, Entity entity, in ParticlesPlay play, in ParticleEffectCount count, in ParticleEffectPrefab prefab, in Translation translation, in Rotation rotation) =>
+				{
+					if (play.value)
+					{
+						for (int i = 0; i < count.value; ++i)
+						{
+							var newEffect = commandBuffer.Instantiate(entityInQueryIndex, prefab.value);
+							commandBuffer.SetComponent(entityInQueryIndex, newEffect, translation);
+							commandBuffer.SetComponent(entityInQueryIndex, newEffect, rotation);
+						}
+					}
+				})
+				.ScheduleParallel();
+
+			var deltaTime = Time.DeltaTime;
+
+			Entities
+				.ForEach((int entityInQueryIndex, Entity entity, ref ParticleEffectCooldown cooldown, in ParticlesPlay play, in ParticleEffectInterval interval, in ParticleEffectPrefab prefab, in Translation translation, in Rotation rotation) =>
+				{
+					if (play.value)
+					{
+						cooldown.value -= deltaTime;
+
+						while (cooldown.value <= 0.0f)
+						{
+							var newEffect = commandBuffer.Instantiate(entityInQueryIndex, prefab.value);
+							commandBuffer.SetComponent(entityInQueryIndex, newEffect, translation);
+							commandBuffer.SetComponent(entityInQueryIndex, newEffect, rotation);
+
+							cooldown.value += interval.value;
+						}
+					}
+				})
+				.ScheduleParallel();
+			
 			m_CommandBuffer.AddJobHandleForProducer(this.Dependency);
 		}
 	}
