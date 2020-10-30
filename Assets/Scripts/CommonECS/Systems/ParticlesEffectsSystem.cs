@@ -25,14 +25,12 @@ namespace CommonECS.Systems
 			var randomArray = m_RandomArray;
 
 			Entities
-				.ForEach((int entityInQueryIndex, Entity entity, in ParticlePrefab prefab, in Translation translation, in Rotation rotation) =>
+				.ForEach((int entityInQueryIndex, Entity entity, in ParticlePrefab prefab, in ParticleRandomLifetime randomLifetime, in ParticleRandomSize randomSize, in Translation translation, in Rotation rotation) =>
 				{
 					var random = randomArray[0];
 
 					var hasEmissionBox = HasComponent<ParticleEmissionBox>(entity);
 					var hasEmissionSphere = HasComponent<ParticleEmissionSphere>(entity);
-					var hasRandomLifetime = HasComponent<ParticleRandomLifetime>(entity);
-					var hasRandomSize = HasComponent<ParticleRandomSize>(entity);
 					var hasRandomRotation = HasComponent<ParticleRandomRotation>(entity);
 					var hasRandomDirection = HasComponent<ParticleRandomDirection>(entity);
 					var hasRandomSpeed = HasComponent<ParticleRandomSpeed>(entity);
@@ -42,6 +40,14 @@ namespace CommonECS.Systems
 					var newParticle = commandBuffer.Instantiate(entityInQueryIndex, prefab.value);
 					commandBuffer.SetComponent(entityInQueryIndex, newParticle, translation);
 
+					var lifetimeValue = random.NextFloat(randomLifetime.min, randomLifetime.max);
+					commandBuffer.AddComponent(entityInQueryIndex, newParticle, new Lifetime { value = lifetimeValue });
+					commandBuffer.AddComponent(entityInQueryIndex, newParticle, new Livetime());
+
+					var sizeValue = random.NextFloat(randomSize.min, randomSize.max);
+					commandBuffer.AddComponent(entityInQueryIndex, newParticle, new SizeReference { value = sizeValue });
+					commandBuffer.AddComponent(entityInQueryIndex, newParticle, new NonUniformScale { Value = sizeValue });
+					
 					if (hasEmissionBox)
 					{
 						var particleEmissionBox = GetComponent<ParticleEmissionBox>(entity);
@@ -57,23 +63,7 @@ namespace CommonECS.Systems
 						randomOffset += translation.Value;
 						commandBuffer.SetComponent(entityInQueryIndex, newParticle, new Translation { Value = randomOffset });
 					}
-
-					if (hasRandomLifetime)
-					{
-						var particleRandomLifetime = GetComponent<ParticleRandomLifetime>(entity);
-						var randomLifetime = random.NextFloat(particleRandomLifetime.min, particleRandomLifetime.max);
-						commandBuffer.AddComponent(entityInQueryIndex, newParticle, new Lifetime { value = randomLifetime });
-						commandBuffer.AddComponent(entityInQueryIndex, newParticle, new Livetime());
-					}
-
-					if (hasRandomSize)
-					{
-						var particleRandomSize = GetComponent<ParticleRandomSize>(entity);
-						var randomSize = random.NextFloat(particleRandomSize.min, particleRandomSize.max);
-						commandBuffer.AddComponent(entityInQueryIndex, newParticle, new SizeReference { value = randomSize });
-						commandBuffer.AddComponent(entityInQueryIndex, newParticle, new NonUniformScale { Value = randomSize });
-					}
-
+					
 					if (hasRandomRotation)
 					{
 						var particleRandomRotation = GetComponent<ParticleRandomRotation>(entity);
@@ -102,7 +92,7 @@ namespace CommonECS.Systems
 						var particleSizeOverLifetime = GetComponent<ParticleSizeOverLifetime>(entity);
 						var curveRef = particleSizeOverLifetime.curveRef;
 						commandBuffer.AddComponent(entityInQueryIndex, newParticle, new SizeOverLifetime { curveRef = curveRef });
-						commandBuffer.AddComponent(entityInQueryIndex, newParticle, new NonUniformScale { Value = curveRef.Value.Evaluate(0.0f) });
+						commandBuffer.AddComponent(entityInQueryIndex, newParticle, new NonUniformScale { Value = curveRef.Value.Evaluate(0.0f) * sizeValue });
 					}
 
 					if (hasColorOverLifetime)

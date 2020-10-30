@@ -1,5 +1,6 @@
 ﻿using CommonECS.Structs;
 using Unity.Entities;
+using Unity.Transforms;
 using UnityEngine;
 
 namespace CommonECS.Components
@@ -13,6 +14,10 @@ namespace CommonECS.Components
 		{
 			var sizeOverLifetime = new SizeOverLifetime { curveRef = AnimationsCurve.ConstructBlobAssetReference(curve, samples) };
 
+			var localScale = transform.localScale;
+			var sizeValue = (localScale.x + localScale.y + localScale.z) * (1.0f / 3.0f);
+			dstManager.AddComponentData(entity, new SizeReference { value = sizeValue });
+			dstManager.AddComponentData(entity, new NonUniformScale { Value = sizeOverLifetime.curveRef.Value.Evaluate(0.0f) * sizeValue });
 			dstManager.AddComponentData(entity, sizeOverLifetime);
 		}
 	}

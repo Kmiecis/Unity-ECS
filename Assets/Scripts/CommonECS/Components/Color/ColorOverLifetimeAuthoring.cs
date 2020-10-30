@@ -13,6 +13,8 @@ namespace CommonECS.Components
 		{
 			var colorOverLifetime = new ColorOverLifetime { gradientsRef = Gradients.ConstructBlobAssetReference(gradient, samples) };
 
+			var materialBaseColor = new MaterialBaseColor { value = colorOverLifetime.gradientsRef.Value.Evaluate(0.0f) };
+			dstManager.AddComponentData(entity, materialBaseColor);
 			dstManager.AddComponentData(entity, colorOverLifetime);
 		}
 	}
