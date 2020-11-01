@@ -22,9 +22,10 @@ namespace CommonECS.Systems
 			Entities
 				.ForEach((int entityInQueryIndex, Entity entity, ref Lifetime lifetime) =>
 				{
+					var lifetimeValue = lifetime.value;
 					lifetime.value -= deltaTime;
 
-					if (lifetime.value <= 0.0f)
+					if (lifetime.value <= 0.0f && lifetimeValue > 0.0f)
 					{
 						commandBuffer.AddComponent(entityInQueryIndex, entity, new DestroyTag());
 					}
