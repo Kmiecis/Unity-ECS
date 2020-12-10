@@ -5,6 +5,6 @@ namespace CommonECS.Components
 {
 	public struct ParticleColorOverLifetime : IComponentData
 	{
-		public BlobAssetReference<Gradients> gradientsRef;
+		public BlobAssetReference<SampledGradient> gradientsRef;
 	}
 }

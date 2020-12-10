@@ -124,7 +124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cf397ea69627c5498155904af365d2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  samples: 255
+  samples: 16
   curve:
     serializedVersion: 2
     m_Curve:
@@ -170,7 +170,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f7405eed20460245a2c11529ddfa07d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  samples: 255
+  samples: 16
   gradient:
     serializedVersion: 2
     key0: {r: 1, g: 1, b: 1, a: 0}

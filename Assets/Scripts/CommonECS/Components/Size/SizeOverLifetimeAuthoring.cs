@@ -12,7 +12,7 @@ namespace CommonECS.Components
 
 		public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
 		{
-			var sizeOverLifetime = new SizeOverLifetime { curveRef = AnimationsCurve.ConstructBlobAssetReference(curve, samples) };
+			var sizeOverLifetime = new SizeOverLifetime { curveRef = SampledAnimationCurve.ConstructBlobAssetReference(curve, samples) };
 
 			var localScale = transform.localScale;
 			var sizeValue = (localScale.x + localScale.y + localScale.z) * (1.0f / 3.0f);

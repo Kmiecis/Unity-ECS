@@ -13,7 +13,7 @@ namespace CommonECS.Components
 				{
 					var lifetimeNormalized = math.min((livetime.value) / (livetime.value + lifetime.value), 1.0f);
 					ref var sizeOverLifetimeCurve = ref sizeOverLifetime.curveRef.Value;
-					ref var sizeEvaluated = ref sizeOverLifetimeCurve.Evaluate(lifetimeNormalized);
+					var sizeEvaluated = sizeOverLifetimeCurve.Evaluate(lifetimeNormalized);
 					scale.Value = sizeEvaluated * sizeReference.value;
 				})
 				.ScheduleParallel();

@@ -11,7 +11,7 @@ namespace CommonECS.Components
 
 		public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
 		{
-			var particleEffectColorOverLifetime = new ParticleColorOverLifetime { gradientsRef = Gradients.ConstructBlobAssetReference(gradient, samples) };
+			var particleEffectColorOverLifetime = new ParticleColorOverLifetime { gradientsRef = SampledGradient.ConstructBlobAssetReference(gradient, samples) };
 
 			dstManager.AddComponentData(entity, particleEffectColorOverLifetime);
 		}

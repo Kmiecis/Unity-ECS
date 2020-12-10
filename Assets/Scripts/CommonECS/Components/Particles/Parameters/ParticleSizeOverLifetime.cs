@@ -5,6 +5,6 @@ namespace CommonECS.Components
 {
 	public struct ParticleSizeOverLifetime : IComponentData
 	{
-		public BlobAssetReference<AnimationsCurve> curveRef;
+		public BlobAssetReference<SampledAnimationCurve> curveRef;
 	}
 }

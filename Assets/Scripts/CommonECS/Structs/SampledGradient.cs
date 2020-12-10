@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace CommonECS.Structs
 {
-	public struct Gradients
+	public struct SampledGradient
 	{
 		public int samples;
 		public BlobArray<float4> keys;
@@ -19,17 +19,17 @@ namespace CommonECS.Structs
 			return ref keys[index];
 		}
 
-		public static BlobAssetReference<Gradients> ConstructBlobAssetReference(Gradient gradient, int samples = 255)
+		public static BlobAssetReference<SampledGradient> ConstructBlobAssetReference(Gradient gradient, int samples = 255)
 		{
 			using (var blobBuilder = new BlobBuilder(Allocator.Temp))
 			{
-				ref var root = ref blobBuilder.ConstructRoot<Gradients>();
+				ref var root = ref blobBuilder.ConstructRoot<SampledGradient>();
 				var keys = blobBuilder.Allocate(ref root.keys, samples);
 				var step = 1.0f / (samples - 1);
 				for (int i = 0; i < samples; ++i)
 					keys[i] = graphics.rgba(gradient.Evaluate(i * step));
 				root.samples = samples;
-				return blobBuilder.CreateBlobAssetReference<Gradients>(Allocator.Persistent);
+				return blobBuilder.CreateBlobAssetReference<SampledGradient>(Allocator.Persistent);
 			}
 		}
 	}

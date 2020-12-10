@@ -11,6 +11,31 @@ namespace CommonECS.Mathematics
 
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static int floor(float v)
+		{
+			return (int)v;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static int2 floor(float2 v)
+		{
+			return (int2)v;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static int3 floor(float3 v)
+		{
+			return (int3)v;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static int4 floor(float4 v)
+		{
+			return (int4)v;
+		}
+
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static int round(float v)
 		{
 			return (int)(v + 0.5f);
@@ -32,6 +57,31 @@ namespace CommonECS.Mathematics
 		public static int4 round(float4 v)
 		{
 			return (int4)(v + 0.5f);
+		}
+
+		
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static int ceil(float v)
+		{
+			return (int)(v + 1.0f);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static int2 ceil(float2 v)
+		{
+			return (int2)(v + 1.0f);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static int3 ceil(float3 v)
+		{
+			return (int3)(v + 1.0f);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static int4 ceil(float4 v)
+		{
+			return (int4)(v + 1.0f);
 		}
 
 
