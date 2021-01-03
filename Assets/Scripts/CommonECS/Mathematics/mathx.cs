@@ -3,6 +3,9 @@ using Unity.Mathematics;
 
 namespace CommonECS.Mathematics
 {
+	/// <summary>
+	/// Extended math library
+	/// </summary>
 	public static class mathx
 	{
 		public const float ROOT_2 = 1.41421356237f;
@@ -59,7 +62,7 @@ namespace CommonECS.Mathematics
 			return (int4)(v + 0.5f);
 		}
 
-		
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static int ceil(float v)
 		{
@@ -86,6 +89,114 @@ namespace CommonECS.Mathematics
 
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float mod(float v, float m)
+		{
+			if (m < 0)
+				m = -m;
+
+			float r = v < 0 ? -v : v;
+
+			while (r >= m)
+				r -= m;
+
+			return v < 0 ? -r : r;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float2 mod(float2 v, float2 m)
+		{
+			return new float2(mod(v.x, m.x), mod(v.y, m.y));
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float3 mod(float3 v, float3 m)
+		{
+			return new float3(mod(v.x, m.x), mod(v.y, m.y), mod(v.z, m.z));
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float4 mod(float4 v, float4 m)
+		{
+			return new float4(mod(v.x, m.x), mod(v.y, m.y), mod(v.z, m.z), mod(v.w, m.w));
+		}
+
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static int shift_left(int v)
+		{
+			if (v > 0)
+				return v >> 1;
+			else if (v < 0)
+				return v << 1;
+			return -1;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static int shift_right(int v)
+		{
+			if (v > 0)
+				return v << 1;
+			else if (v < 0)
+				return v >> 1;
+			return 1;
+		}
+
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static int log_shift_left(int v)
+		{
+			if (v > 0)
+				return v / 10;
+			else if (v < 0)
+				return v * 10;
+			return -1;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static int log_shift_right(int v)
+		{
+			if (v > 0)
+				return v * 10;
+			else if (v < 0)
+				return v / 10;
+			return 1;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float log_shift_left(float v)
+		{
+			if (v > 0)
+				return v / 10;
+			else if (v < 0)
+				return v * 10;
+			return -1;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float log_shift_right(float v)
+		{
+			if (v > 0)
+				return v * 10;
+			else if (v < 0)
+				return v / 10;
+			return 1;
+		}
+
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static bool is_even(int v)
+		{
+			return v % 2 == 0;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static bool is_odd(int v)
+		{
+			return v % 2 != 0;
+		}
+		
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static float2 perpendicular(float2 v)
 		{
 			return new float2(v.y, -v.x);
@@ -103,6 +214,7 @@ namespace CommonECS.Mathematics
 		{
 			return math.abs(a) > math.abs(b) ? a : b;
 		}
+
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool between(float a, float b, float t)
@@ -361,6 +473,47 @@ namespace CommonECS.Mathematics
 		}
 
 
+		/// <summary> Normalizes value x to a range [a, b] </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float unlerp(float a, float b, float v)
+		{
+			return (v - a) / (b - a);
+		}
+
+		/// <summary> Normalizes componentwise value x to a range [a, b] </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float2 unlerp(float2 a, float2 b, float2 v)
+		{
+			return new float2(
+				unlerp(a.x, b.x, v.x),
+				unlerp(a.y, b.y, v.y)
+			);
+		}
+
+		/// <summary> Normalizes componentwise value x to a range [a, b] </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float3 unlerp(float3 a, float3 b, float3 v)
+		{
+			return new float3(
+				unlerp(a.x, b.x, v.x),
+				unlerp(a.y, b.y, v.y),
+				unlerp(a.z, b.z, v.z)
+			);
+		}
+
+		/// <summary> Normalizes componentwise value x to a range [a, b] </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float4 unlerp(float4 a, float4 b, float4 v)
+		{
+			return new float4(
+				unlerp(a.x, b.x, v.x),
+				unlerp(a.y, b.y, v.y),
+				unlerp(a.z, b.z, v.z),
+				unlerp(a.w, b.w, v.w)
+			);
+		}
+
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool greater(float a, float b, float e = EPSILON)
 		{
@@ -377,28 +530,6 @@ namespace CommonECS.Mathematics
 		public static bool equals(float a, float b, float e = EPSILON)
 		{
 			return a - e < b && a + e > b;
-		}
-
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static quaternion rotate_towards(quaternion a, quaternion b, float radians)
-		{
-			float ab_radians = angle_radians(a, b);
-			if (ab_radians == 0.0f) return b;
-			return math.slerp(a, b, math.min(1.0f, radians / ab_radians));
-		}
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static float angle_radians(quaternion a, quaternion b)
-		{
-			var dot = math.dot(a, b);
-			return (dot > 1.0f - EPSILON) ? 0.0f : math.acos(math.min(math.abs(dot), 1.0f)) * 2.0f;
-		}
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static float angle(quaternion a, quaternion b)
-		{
-			return math.degrees(angle_radians(a, b));
 		}
 	}
 }

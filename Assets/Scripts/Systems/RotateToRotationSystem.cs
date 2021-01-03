@@ -19,7 +19,7 @@ namespace CommonECS.Systems
 					var targetRotation = rotate.rotation;
 
 					var radians = math.radians(speed.value);
-					var newRotation = mathx.rotate_towards(currentRotation, targetRotation, radians * deltaTime);
+					var newRotation = mathu.rotate_towards(currentRotation, targetRotation, radians * deltaTime);
 
 					rotation.Value = newRotation;
 				})
