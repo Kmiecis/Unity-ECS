@@ -1,0 +1,3 @@
+[submodule "Assets/Scripts/CommonECS"]
+	path = Assets/Scripts/CommonECS
+	url = https://github.com/Kmiecis/Unity-CommonECS
