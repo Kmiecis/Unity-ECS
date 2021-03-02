@@ -2,21 +2,17 @@
 {
 	public struct PathNode
 	{
-		public int index;
 		public int x;
 		public int y;
 
-		public int gCost;
-		public int hCost;
-		public int fCost;
+		public int currIndex;
+		public int prevIndex;
+
+		public int traverseCost;
+		public int cumulativeCost; // G cost
+		public int distanceCost; // H cost
+		public int totalCost; // F cost
 
 		public bool isWalkable;
-
-		public int targetIndex;
-
-		public void CalculateFCost()
-		{
-			fCost = gCost + hCost;
-		}
 	}
 }

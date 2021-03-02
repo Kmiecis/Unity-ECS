@@ -1,6 +1,4 @@
 ﻿using CommonECS.Mathematics;
-using System;
-using System.Collections;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
@@ -11,226 +9,178 @@ namespace CommonECS.Pathfinding
 {
 	public class PathBehaviour : MonoBehaviour
 	{
-		private void Start()
-		{
-			StartCoroutine(InvokeRepeating(() => {
-				float startTime = Time.realtimeSinceStartup;
-
-				int findPathJobCount = 5;
-				var jobHandles = new NativeArray<JobHandle>(findPathJobCount, Allocator.Temp);
-				for (int i = 0; i < findPathJobCount; ++i)
-				{
-					var findPathJob = new FindPathJob()
-					{
-						startPosition = new int2(0, 0),
-						targetPosition = new int2(19, 19)
-					};
-					jobHandles[i] = findPathJob.Schedule();
-				}
-				JobHandle.CompleteAll(jobHandles);
-				jobHandles.Dispose();
-
-				float endTime = Time.realtimeSinceStartup;
-				Debug.Log("Took: " + (endTime - startTime) * 1000 + " ms");
-			}, 1f));
-		}
-
 		[BurstCompile]
 		private struct FindPathJob : IJob
 		{
+			private const int TRAVERSE_COST = 10;
+			private const int DISTANCE_COST = 10;
+			private const int DIAGONAL_COST = 14;
+
 			public int2 startPosition;
 			public int2 targetPosition;
 
+			public NativeArray<bool> grid;
+			public int gridWidth;
+			public int gridHeight;
+
 			public void Execute()
 			{
-				var gridSize = new int2(20, 20);
-				var pathNodeArray = new NativeArray<PathNode>(gridSize.x * gridSize.y, Allocator.Temp);
+				var gridrange = new intrange2(0, 0, gridWidth - 1, gridHeight - 1);
+				var pathArray = new NativeArray<PathNode>(gridWidth * gridHeight, Allocator.Temp);
 
-				for (int y = 0; y < gridSize.y; y++)
+				for (int y = 0; y < gridHeight; y++)
 				{
-					for (int x = 0; x < gridSize.x; x++)
+					for (int x = 0; x < gridWidth; x++)
 					{
+						var index = x + y * gridWidth;
+
 						var pathNode = new PathNode();
 						pathNode.x = x;
 						pathNode.y = y;
-						pathNode.index = CalculateNodeIndex(x, y, gridSize.x);
-						pathNode.gCost = 0;
-						pathNode.hCost = CalculateDistanceCost(new int2(x, y), targetPosition);
-						pathNode.CalculateFCost();
-						pathNode.isWalkable = true;
-						pathNode.targetIndex = -1;
+						pathNode.currIndex = index;
+						pathNode.prevIndex = -1;
+						pathNode.cumulativeCost = int.MaxValue;
+						pathNode.isWalkable = grid[index];
 
-						pathNodeArray[pathNode.index] = pathNode;
+						pathArray[index] = pathNode;
 					}
 				}
 
-				var startNodeIndex = CalculateNodeIndex(startPosition.x, startPosition.y, gridSize.x);
-				var targetNodeIndex = CalculateNodeIndex(targetPosition.x, targetPosition.y, gridSize.x);
+				var targetIndex = targetPosition.x + targetPosition.y * gridWidth;
+				var targetNode = pathArray[targetIndex];
 
-				var startNode = pathNodeArray[startNodeIndex];
-				startNode.gCost = 0;
-				startNode.CalculateFCost();
-				pathNodeArray[startNode.index] = startNode;
+				var startIndex = startPosition.x + startPosition.y * gridWidth;
+				var startNode = pathArray[startIndex];
+				startNode.cumulativeCost = 0;
+				pathArray[startIndex] = startNode;
 
-				var openList = new NativeList<int>(Allocator.Temp);
-				var closedArray = new NativeArray<bool>(gridSize.x * gridSize.y, Allocator.Temp);
+				var remainingList = new NativeList<int>(Allocator.Temp);
+				var checkedArray = new NativeArray<bool>(gridWidth * gridHeight, Allocator.Temp);
 
-				var neighbourOffsetArray = new NativeArray<int2>(8, Allocator.Temp);
-				neighbourOffsetArray[0] = new int2(-1, 0);
-				neighbourOffsetArray[1] = new int2(+1, 0);
-				neighbourOffsetArray[2] = new int2(0, +1);
-				neighbourOffsetArray[3] = new int2(0, -1);
-				neighbourOffsetArray[4] = new int2(-1, -1);
-				neighbourOffsetArray[5] = new int2(-1, +1);
-				neighbourOffsetArray[6] = new int2(+1, +1);
-				neighbourOffsetArray[7] = new int2(+1, -1);
+				var directionsArray = new NativeArray<int2>(8, Allocator.Temp);
+				directionsArray[0] = new int2(-1, 0);
+				directionsArray[1] = new int2(+1, 0);
+				directionsArray[2] = new int2(0, +1);
+				directionsArray[3] = new int2(0, -1);
+				directionsArray[4] = new int2(-1, -1);
+				directionsArray[5] = new int2(-1, +1);
+				directionsArray[6] = new int2(+1, +1);
+				directionsArray[7] = new int2(+1, -1);
 
-				openList.Add(startNode.index);
-				while (openList.Length > 0)
+				remainingList.Add(startIndex);
+				while (remainingList.Length > 0)
 				{
-					int currentNodeIndex = GetLowestCostFNodeIndex(openList, pathNodeArray);
-					if (currentNodeIndex == targetNodeIndex)
-					{
-						// Reached destination
+					int currentNodeIndex = GetLowestTotalCostNodeIndex(remainingList, pathArray);
+
+					if (currentNodeIndex == targetIndex)
 						break;
-					}
+					
+					if (remainingList.TryIndexOf(currentNodeIndex, out int index))
+						remainingList.RemoveAtSwapBack(index);
+					
+					checkedArray[currentNodeIndex] = true;
 
-					var currentNode = pathNodeArray[currentNodeIndex];
+					var currentNode = pathArray[currentNodeIndex];
 
-					// Remove current node from open list
-					for (int i = 0; i < openList.Length; ++i)
+					for (int i = 0; i < directionsArray.Length; ++i)
 					{
-						if (openList[i] == currentNodeIndex)
-						{
-							openList.RemoveAtSwapBack(i);
-							break;
-						}
-					}
+						var direction = directionsArray[i];
 
-					closedArray[currentNodeIndex] = true;
+						var neighbourX = currentNode.x + direction.x;
+						var neighbourY = currentNode.y + direction.y;
 
-					for (int i = 0; i < neighbourOffsetArray.Length; ++i)
-					{
-						int2 neighbourOffset = neighbourOffsetArray[i];
-						int2 neighbourNodePosition = new int2(currentNode.x + neighbourOffset.x, currentNode.y + neighbourOffset.y);
-
-						if (!IsPositionInsideGrid(neighbourNodePosition, gridSize))
-						{
-							// Neighbour not a valid position
+						if (!gridrange.Contains(neighbourX, neighbourY))
 							continue;
-						}
 
-						int neighbourNodeIndex = CalculateNodeIndex(neighbourNodePosition.x, neighbourNodePosition.y, gridSize.x);
-
-						if (closedArray[neighbourNodeIndex])
-						{
-							// Already searched this node
+						int neighbourNodeIndex = neighbourX + neighbourY * gridWidth;
+						if (checkedArray[neighbourNodeIndex])
 							continue;
-						}
 
-						var neighbourNode = pathNodeArray[neighbourNodeIndex];
+						var neighbourNode = pathArray[neighbourNodeIndex];
 						if (!neighbourNode.isWalkable)
-						{
-							// Not walkable
 							continue;
-						}
-
-						var currentNodePosition = new int2(currentNode.x, currentNode.y);
-
-						int tentativeGCost = currentNode.gCost + CalculateDistanceCost(currentNodePosition, neighbourNodePosition);
-						if (tentativeGCost < neighbourNode.gCost)
+						
+						int totalCumulativeCost = currentNode.cumulativeCost + GetDistanceCost(currentNode, neighbourNode) + neighbourNode.traverseCost;
+						if (totalCumulativeCost < neighbourNode.cumulativeCost)
 						{
-							neighbourNode.targetIndex = currentNodeIndex;
-							neighbourNode.gCost = tentativeGCost;
-							neighbourNode.CalculateFCost();
+							neighbourNode.prevIndex = currentNodeIndex;
+							neighbourNode.cumulativeCost = totalCumulativeCost;
+							neighbourNode.distanceCost = GetDistanceCost(neighbourNode, targetNode);
+							neighbourNode.totalCost = neighbourNode.cumulativeCost + neighbourNode.distanceCost;
 
-							pathNodeArray[neighbourNodeIndex] = neighbourNode;
-							if (!openList.Contains(neighbourNodeIndex))
-							{
-								openList.Add(neighbourNodeIndex);
-							}
+							pathArray[neighbourNodeIndex] = neighbourNode;
+
+							if (!remainingList.Contains(neighbourNodeIndex))
+								remainingList.Add(neighbourNodeIndex);
 						}
 					}
 				}
 
-				var targetNode = pathNodeArray[targetNodeIndex];
-				if (targetNode.targetIndex == -1)
+				var result = new NativeList<int2>(Allocator.Temp);
+
+				var node = pathArray[targetIndex];
+				while (node.prevIndex != -1)
 				{
-					// Didn't find a path
+					var prev = pathArray[node.prevIndex];
+
+					if (result.Length > 1)
+					{
+						var last = result[result.Length - 1];
+						if (
+							math.sign(node.x - last.x) != math.sign(prev.x - node.x) ||
+							math.sign(node.y - last.y) != math.sign(prev.y - node.y)
+						)
+						{
+							result.Add(new int2(node.x, node.y));
+						}
+					}
+					else
+					{
+						result.Add(new int2(node.x, node.y));
+					}
+
+					node = prev;
 				}
-				else
+				if (result.Length > 1)
 				{
-					// Found a path
-					var path = CalculatePath(pathNodeArray, targetNode);
-					path.Dispose();
+					result.Add(new int2(node.x, node.y));
 				}
-
-				pathNodeArray.Dispose();
-				openList.Dispose();
-				closedArray.Dispose();
-				neighbourOffsetArray.Dispose();
+				result.Dispose(); // Better something else next time...
+				
+				pathArray.Dispose();
+				remainingList.Dispose();
+				checkedArray.Dispose();
+				directionsArray.Dispose();
 			}
 
-			private int CalculateNodeIndex(int x, int y, int width)
+			private static int GetDistanceCost(PathNode a, PathNode b)
 			{
-				return x + y * width;
+				int dx = Mathf.Abs(b.x - a.x);
+				int dy = Mathf.Abs(b.y - a.y);
+				if (dx > dy)
+					return DIAGONAL_COST * dy + DISTANCE_COST * (dx - dy);
+				return DIAGONAL_COST * dx + DISTANCE_COST * (dy - dx);
 			}
 
-			private int CalculateDistanceCost(int2 a, int2 b)
+			private int GetLowestTotalCostNodeIndex(NativeList<int> openList, NativeArray<PathNode> pathArray)
 			{
-				int dx = math.abs(a.x - b.x);
-				int dy = math.abs(a.y - b.y);
-				int d = math.abs(dx - dy);
-				return math.min(dx, dy) + d;
-			}
+				var result = openList[0];
+				var nodeA = pathArray[result];
 
-			private int GetLowestCostFNodeIndex(NativeList<int> openList, NativeArray<PathNode> pathNodeArray)
-			{
-				var result = pathNodeArray[openList[0]];
 				for (int i = 1; i < openList.Length; ++i)
 				{
-					var test = pathNodeArray[openList[i]];
-					if (result.fCost > test.fCost)
+					var current = openList[i];
+					var nodeB = pathArray[current];
+					
+					if (nodeA.totalCost > nodeB.totalCost)
 					{
-						result = test;
+						result = current;
+						nodeA = nodeB;
 					}
 				}
-				return result.index;
+
+				return result;
 			}
-
-			private bool IsPositionInsideGrid(int2 gridPosition, int2 gridSize)
-			{
-				return mathx.between(-1, gridSize.x, gridPosition.x) && mathx.between(-1, gridSize.y, gridPosition.y);
-			}
-
-			private NativeList<int2> CalculatePath(NativeArray<PathNode> pathNodeArray, PathNode endNode)
-			{
-				if (endNode.targetIndex == -1)
-				{
-					// Couln't find a path
-					return new NativeList<int2>(Allocator.Temp);
-				}
-				else
-				{
-					var result = new NativeList<int2>(Allocator.Temp);
-					result.Add(new int2(endNode.x, endNode.y));
-
-					var currentNode = endNode;
-					while (currentNode.targetIndex != -1)
-					{
-						currentNode = pathNodeArray[currentNode.targetIndex];
-						result.Add(new int2(currentNode.x, currentNode.y));
-					}
-
-					return result;
-				}
-			}
-		}
-
-		IEnumerator InvokeRepeating(Action action, float delay)
-		{
-			action?.Invoke();
-			yield return new WaitForSecondsRealtime(delay);
 		}
 	}
 }
