@@ -1,10 +1,9 @@
 ﻿using Unity.Entities;
 
-namespace CommonECS.Components
+namespace Components
 {
-	[GenerateAuthoringComponent]
-	public struct ApproachCheck : IComponentData
-	{
-		public bool value;
-	}
+    public struct ApproachCheck : IComponentData
+    {
+        public bool value;
+    }
 }

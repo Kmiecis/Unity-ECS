@@ -1,21 +1,21 @@
-﻿using CommonECS.Components;
+﻿using Components;
 using Unity.Entities;
 using Unity.Transforms;
 
-namespace CommonECS.Systems
+namespace Systems
 {
-	public class TranslateSystem : SystemBase
-	{
-		protected override void OnUpdate()
-		{
-			var deltaTime = Time.DeltaTime;
+    public partial class TranslateSystem : SystemBase
+    {
+        protected override void OnUpdate()
+        {
+            var deltaTime = World.Time.DeltaTime;
 
-			Entities
-				.ForEach((ref Translation translation, in TranslateDirection direction, in TranslateSpeed speed) =>
-				{
-					translation.Value += direction.value * speed.value * deltaTime;
-				}
-				).ScheduleParallel();
-		}
-	}
+            Entities
+                .ForEach((ref LocalTransform transform, in TranslateDirection direction, in TranslateSpeed speed) =>
+                {
+                    transform.Position += direction.value * speed.value * deltaTime;
+                }
+                ).ScheduleParallel();
+        }
+    }
 }

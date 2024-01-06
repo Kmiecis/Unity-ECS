@@ -1,11 +1,10 @@
-﻿using CommonECS.Structs;
+﻿using Structs;
 using Unity.Entities;
 
-namespace CommonECS.Components
+namespace Components
 {
-	// Has manually generated authoring
-	public struct SizeOverLifetime : IComponentData
-	{
-		public BlobAssetReference<SampledAnimationCurve> curveRef;
-	}
+    public struct SizeOverLifetime : IComponentData
+    {
+        public BlobAssetReference<SampledAnimationCurve> curveRef;
+    }
 }

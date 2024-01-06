@@ -1,12 +1,11 @@
 ﻿using Unity.Entities;
 using Unity.Mathematics;
 
-namespace CommonECS.Components
+namespace Components
 {
-	[GenerateAuthoringComponent]
-	public struct ParticleRandomRotation : IComponentData
-	{
-		public float3 min;
-		public float3 max;
-	}
+    public struct ParticleRandomRotation : IComponentData
+    {
+        public float3 min;
+        public float3 max;
+    }
 }

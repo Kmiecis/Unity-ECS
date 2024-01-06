@@ -1,10 +1,10 @@
-﻿using CommonECS.Structs;
+﻿using Structs;
 using Unity.Entities;
 
-namespace CommonECS.Components
+namespace Components
 {
-	public struct ParticleColorOverLifetime : IComponentData
-	{
-		public BlobAssetReference<SampledGradient> gradientsRef;
-	}
+    public struct ParticleColorOverLifetime : IComponentData
+    {
+        public BlobAssetReference<SampledGradient> gradientsRef;
+    }
 }

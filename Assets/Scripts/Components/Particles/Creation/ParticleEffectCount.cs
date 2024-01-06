@@ -1,10 +1,9 @@
 ﻿using Unity.Entities;
 
-namespace CommonECS.Components
+namespace Components
 {
-	[GenerateAuthoringComponent]
-	public struct ParticleEffectCount : IComponentData
-	{
-		public int value;
-	}
+    public struct ParticleEffectCount : IComponentData
+    {
+        public int value;
+    }
 }

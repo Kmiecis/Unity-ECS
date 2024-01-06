@@ -1,11 +1,10 @@
 ﻿using Unity.Entities;
 
-namespace CommonECS.Components
+namespace Components
 {
-	[GenerateAuthoringComponent]
-	public struct ParticleRandomSize : IComponentData
-	{
-		public float min;
-		public float max;
-	}
+    public struct ParticleRandomSize : IComponentData
+    {
+        public float min;
+        public float max;
+    }
 }

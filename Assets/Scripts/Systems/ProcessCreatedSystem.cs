@@ -1,32 +1,33 @@
-﻿using CommonECS.Components;
+﻿using Components;
 using Unity.Entities;
 using Unity.Jobs;
 
-namespace CommonECS.Systems
+namespace Systems
 {
-	public class ProcessCreatedSystem : SystemBase
-	{
-		private BeginInitializationEntityCommandBufferSystem m_CommandBufferSystem;
+    public partial class ProcessCreatedSystem : SystemBase
+    {
+        private BeginInitializationEntityCommandBufferSystem m_CommandBufferSystem;
 
-		protected override void OnCreate()
-		{
-			base.OnCreate();
-			m_CommandBufferSystem = World.GetOrCreateSystem<BeginInitializationEntityCommandBufferSystem>();
-		}
+        protected override void OnCreate()
+        {
+            base.OnCreate();
 
-		protected override void OnUpdate()
-		{
-			var commandBuffer = m_CommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
+            m_CommandBufferSystem = World.GetOrCreateSystemManaged<BeginInitializationEntityCommandBufferSystem>();
+        }
 
-			Entities
-				.WithAll<CreatedTag>()
-				.ForEach((Entity entity) =>
-				{
-					commandBuffer.RemoveComponent<CreatedTag>(entity.Index, entity);
-				}
-				).ScheduleParallel();
+        protected override void OnUpdate()
+        {
+            var commands = m_CommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
 
-			m_CommandBufferSystem.AddJobHandleForProducer(this.Dependency);
-		}
-	}
+            Entities
+                .WithAll<CreatedTag>()
+                .ForEach((Entity entity) =>
+                {
+                    commands.RemoveComponent<CreatedTag>(entity.Index, entity);
+                }
+                ).ScheduleParallel();
+
+            m_CommandBufferSystem.AddJobHandleForProducer(this.Dependency);
+        }
+    }
 }

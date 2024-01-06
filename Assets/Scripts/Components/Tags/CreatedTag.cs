@@ -1,8 +1,8 @@
 ﻿using Unity.Entities;
 
-namespace CommonECS.Components
+namespace Components
 {
-	public struct CreatedTag : IComponentData
-	{
-	}
+    public struct CreatedTag : IComponentData
+    {
+    }
 }

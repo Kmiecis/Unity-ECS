@@ -1,42 +1,41 @@
-﻿using CommonECS.Components;
-using CommonECS.Mathematics;
+﻿using Components;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
-namespace CommonECS.Systems
+namespace Systems
 {
-	public class PlayerInputSystem : SystemBase
-	{
-		protected override void OnUpdate()
-		{
-			float2 inputMovement = float2.zero;
-			if (Input.GetKey(KeyCode.W))
-				inputMovement.y += 1.0f;
-			if (Input.GetKey(KeyCode.S))
-				inputMovement.y -= 1.0f;
-			if (Input.GetKey(KeyCode.D))
-				inputMovement.x += 1.0f;
-			if (Input.GetKey(KeyCode.A))
-				inputMovement.x -= 1.0f;
+    public partial class PlayerInputSystem : SystemBase
+    {
+        protected override void OnUpdate()
+        {
+            float2 inputMovement = float2.zero;
+            if (Input.GetKey(KeyCode.W))
+                inputMovement.y += 1.0f;
+            if (Input.GetKey(KeyCode.S))
+                inputMovement.y -= 1.0f;
+            if (Input.GetKey(KeyCode.D))
+                inputMovement.x += 1.0f;
+            if (Input.GetKey(KeyCode.A))
+                inputMovement.x -= 1.0f;
 
-			var moves = math.lengthsq(inputMovement) > 0.0f;
-			if (moves)
-				inputMovement = math.normalize(inputMovement);
+            var moves = math.lengthsq(inputMovement) > 0.0f;
+            if (moves)
+                inputMovement = math.normalize(inputMovement);
 
-			var fires = Input.GetKey(KeyCode.Space);
+            var fires = Input.GetKey(KeyCode.Space);
 
-			Entities
-				.WithAll<PlayerTag>()
-				.ForEach((ref TranslateDirection direction, ref RotateToRotation rotate, ref ParticlesPlay particlesPlay, in Rotation rotation) =>
-				{
-					var inputDirection = new float3(inputMovement.x, 0.0f, inputMovement.y);
-					direction.value = inputDirection;
-					rotate.rotation = moves ? quaternion.LookRotation(inputDirection, math.up()) : rotation.Value;
-					particlesPlay.value = fires;
-				})
-				.Schedule();
-		}
-	}
+            Entities
+                .WithAll<PlayerTag>()
+                .ForEach((ref TranslateDirection direction, ref RotateToRotation rotate, ref ParticlesPlay particlesPlay, in LocalTransform transform) =>
+                {
+                    var inputDirection = new float3(inputMovement.x, 0.0f, inputMovement.y);
+                    direction.value = inputDirection;
+                    rotate.rotation = moves ? quaternion.LookRotation(inputDirection, math.up()) : transform.Rotation;
+                    particlesPlay.value = fires;
+                })
+                .Schedule();
+        }
+    }
 }

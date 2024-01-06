@@ -1,10 +1,9 @@
 ﻿using Unity.Entities;
 
-namespace CommonECS.Components
+namespace Components
 {
-	[GenerateAuthoringComponent]
-	public struct Livetime : IComponentData
-	{
-		public float value;
-	}
+    public struct Livetime : IComponentData
+    {
+        public float value;
+    }
 }

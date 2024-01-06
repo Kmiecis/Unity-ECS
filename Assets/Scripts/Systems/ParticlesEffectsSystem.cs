@@ -1,121 +1,119 @@
-﻿using CommonECS.Components;
+﻿using Components;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-namespace CommonECS.Systems
+namespace Systems
 {
-	public class ParticlesEffectsSystem : SystemBase
-	{
-		private EntityCommandBufferSystem m_CommandBuffer;
-		private NativeArray<Random> m_RandomArray;
+    public partial class ParticlesEffectsSystem : SystemBase
+    {
+        private EntityCommandBufferSystem m_CommandBuffer;
+        private NativeArray<Random> m_RandomArray;
 
-		protected override void OnCreate()
-		{
-			base.OnCreate();
-			m_CommandBuffer = World.GetOrCreateSystem<BeginInitializationEntityCommandBufferSystem>();
-			m_RandomArray = new NativeArray<Random>(1, Allocator.Persistent);
-			m_RandomArray[0] = new Random(1);
-		}
+        protected override void OnCreate()
+        {
+            base.OnCreate();
 
-		protected override void OnUpdate()
-		{
-			var commandBuffer = m_CommandBuffer.CreateCommandBuffer().AsParallelWriter();
-			var randomArray = m_RandomArray;
+            m_CommandBuffer = World.GetOrCreateSystemManaged<BeginInitializationEntityCommandBufferSystem>();
+            m_RandomArray = new NativeArray<Random>(1, Allocator.Persistent);
+            m_RandomArray[0] = new Random(1);
+        }
 
-			Entities
-				.ForEach((int entityInQueryIndex, Entity entity, in ParticlePrefab prefab, in ParticleRandomLifetime randomLifetime, in ParticleRandomSize randomSize, in Translation translation, in Rotation rotation) =>
-				{
-					var random = randomArray[0];
+        protected override void OnUpdate()
+        {
+            var commands = m_CommandBuffer.CreateCommandBuffer().AsParallelWriter();
 
-					var hasEmissionBox = HasComponent<ParticleEmissionBox>(entity);
-					var hasEmissionSphere = HasComponent<ParticleEmissionSphere>(entity);
-					var hasRandomRotation = HasComponent<ParticleRandomRotation>(entity);
-					var hasRandomDirection = HasComponent<ParticleRandomDirection>(entity);
-					var hasRandomSpeed = HasComponent<ParticleRandomSpeed>(entity);
-					var hasSizeOverLifetime = HasComponent<ParticleSizeOverLifetime>(entity);
-					var hasColorOverLifetime = HasComponent<ParticleColorOverLifetime>(entity);
+            Entities
+                .ForEach((int entityInQueryIndex, Entity entity, in ParticlePrefab prefab, in ParticleRandomLifetime randomLifetime, in ParticleRandomSize randomSize, in LocalTransform transform) =>
+                {
+                    var random = new Random((uint)entity.Index);
 
-					var newParticle = commandBuffer.Instantiate(entityInQueryIndex, prefab.value);
-					commandBuffer.SetComponent(entityInQueryIndex, newParticle, translation);
+                    var hasEmissionBox = SystemAPI.HasComponent<ParticleEmissionBox>(entity);
+                    var hasEmissionSphere = SystemAPI.HasComponent<ParticleEmissionSphere>(entity);
+                    var hasRandomRotation = SystemAPI.HasComponent<ParticleRandomRotation>(entity);
+                    var hasRandomDirection = SystemAPI.HasComponent<ParticleRandomDirection>(entity);
+                    var hasRandomSpeed = SystemAPI.HasComponent<ParticleRandomSpeed>(entity);
+                    var hasSizeOverLifetime = SystemAPI.HasComponent<ParticleSizeOverLifetime>(entity);
+                    var hasColorOverLifetime = SystemAPI.HasComponent<ParticleColorOverLifetime>(entity);
 
-					var lifetimeValue = random.NextFloat(randomLifetime.min, randomLifetime.max);
-					commandBuffer.AddComponent(entityInQueryIndex, newParticle, new Lifetime { value = lifetimeValue });
-					commandBuffer.AddComponent(entityInQueryIndex, newParticle, new Livetime());
+                    var newParticle = commands.Instantiate(entityInQueryIndex, prefab.value);
+                    var particleTransform = LocalTransform.FromPosition(transform.Position);
 
-					var sizeValue = random.NextFloat(randomSize.min, randomSize.max);
-					commandBuffer.AddComponent(entityInQueryIndex, newParticle, new SizeReference { value = sizeValue });
-					commandBuffer.AddComponent(entityInQueryIndex, newParticle, new NonUniformScale { Value = sizeValue });
-					
-					if (hasEmissionBox)
-					{
-						var particleEmissionBox = GetComponent<ParticleEmissionBox>(entity);
-						var randomOffset = random.NextFloat3(particleEmissionBox.min, particleEmissionBox.max);
-						randomOffset += translation.Value;
-						commandBuffer.SetComponent(entityInQueryIndex, newParticle, new Translation { Value = randomOffset });
-					}
+                    var lifetimeValue = random.NextFloat(randomLifetime.min, randomLifetime.max);
+                    commands.AddComponent(entityInQueryIndex, newParticle, new Lifetime { value = lifetimeValue });
+                    commands.AddComponent(entityInQueryIndex, newParticle, new Livetime());
 
-					if (hasEmissionSphere)
-					{
-						var particleEmissionSphere = GetComponent<ParticleEmissionSphere>(entity);
-						var randomOffset = random.NextFloat(particleEmissionSphere.min, particleEmissionSphere.max) * random.NextFloat3Direction();
-						randomOffset += translation.Value;
-						commandBuffer.SetComponent(entityInQueryIndex, newParticle, new Translation { Value = randomOffset });
-					}
-					
-					if (hasRandomRotation)
-					{
-						var particleRandomRotation = GetComponent<ParticleRandomRotation>(entity);
-						var randomRotation = quaternion.EulerXYZ(random.NextFloat3(particleRandomRotation.min, particleRandomRotation.max));
-						randomRotation = math.mul(rotation.Value, randomRotation);
-						commandBuffer.AddComponent(entityInQueryIndex, newParticle, new Rotation { Value = randomRotation });
-					}
+                    var sizeValue = random.NextFloat(randomSize.min, randomSize.max);
+                    commands.AddComponent(entityInQueryIndex, newParticle, new SizeReference { value = sizeValue });
+                    particleTransform.Scale = sizeValue;
 
-					if (hasRandomDirection)
-					{
-						var particleRandomDirection = GetComponent<ParticleRandomDirection>(entity);
-						var randomDirection = math.normalizesafe(random.NextFloat3(particleRandomDirection.min, particleRandomDirection.max));
-						randomDirection = math.mul(rotation.Value, randomDirection);
-						commandBuffer.AddComponent(entityInQueryIndex, newParticle, new TranslateDirection { value = randomDirection });
-					}
+                    if (hasEmissionBox)
+                    {
+                        var particleEmissionBox = SystemAPI.GetComponent<ParticleEmissionBox>(entity);
+                        var randomOffset = random.NextFloat3(particleEmissionBox.min, particleEmissionBox.max);
+                        particleTransform.Position += randomOffset;
+                    }
 
-					if (hasRandomSpeed)
-					{
-						var particleRandomSpeed = GetComponent<ParticleRandomSpeed>(entity);
-						var randomSpeed = random.NextFloat(particleRandomSpeed.min, particleRandomSpeed.max);
-						commandBuffer.AddComponent(entityInQueryIndex, newParticle, new TranslateSpeed { value = randomSpeed });
-					}
+                    if (hasEmissionSphere)
+                    {
+                        var particleEmissionSphere = SystemAPI.GetComponent<ParticleEmissionSphere>(entity);
+                        var randomOffset = random.NextFloat(particleEmissionSphere.min, particleEmissionSphere.max) * random.NextFloat3Direction();
+                        particleTransform.Position += randomOffset;
+                    }
 
-					if (hasSizeOverLifetime)
-					{
-						var particleSizeOverLifetime = GetComponent<ParticleSizeOverLifetime>(entity);
-						var curveRef = particleSizeOverLifetime.curveRef;
-						commandBuffer.AddComponent(entityInQueryIndex, newParticle, new SizeOverLifetime { curveRef = curveRef });
-						commandBuffer.AddComponent(entityInQueryIndex, newParticle, new NonUniformScale { Value = curveRef.Value.Evaluate(0.0f) * sizeValue });
-					}
+                    if (hasRandomRotation)
+                    {
+                        var particleRandomRotation = SystemAPI.GetComponent<ParticleRandomRotation>(entity);
+                        var randomRotation = quaternion.EulerXYZ(random.NextFloat3(particleRandomRotation.min, particleRandomRotation.max));
+                        particleTransform.Rotation = math.mul(transform.Rotation, randomRotation);
+                    }
 
-					if (hasColorOverLifetime)
-					{
-						var particleColorOverLifetime = GetComponent<ParticleColorOverLifetime>(entity);
-						var gradientsRef = particleColorOverLifetime.gradientsRef;
-						commandBuffer.AddComponent(entityInQueryIndex, newParticle, new ColorOverLifetime { gradientsRef = gradientsRef });
-						commandBuffer.AddComponent(entityInQueryIndex, newParticle, new MaterialBaseColor { value = gradientsRef.Value.Evaluate(0.0f) });
-					}
+                    if (hasRandomDirection)
+                    {
+                        var particleRandomDirection = SystemAPI.GetComponent<ParticleRandomDirection>(entity);
+                        var randomDirection = math.normalizesafe(random.NextFloat3(particleRandomDirection.min, particleRandomDirection.max));
+                        randomDirection = math.mul(transform.Rotation, randomDirection);
+                        commands.AddComponent(entityInQueryIndex, newParticle, new TranslateDirection { value = randomDirection });
+                    }
 
-					randomArray[0] = random;
+                    if (hasRandomSpeed)
+                    {
+                        var particleRandomSpeed = SystemAPI.GetComponent<ParticleRandomSpeed>(entity);
+                        var randomSpeed = random.NextFloat(particleRandomSpeed.min, particleRandomSpeed.max);
+                        commands.AddComponent(entityInQueryIndex, newParticle, new TranslateSpeed { value = randomSpeed });
+                    }
 
-					commandBuffer.DestroyEntity(entityInQueryIndex, entity);
-				})
-				.ScheduleParallel();
+                    if (hasSizeOverLifetime)
+                    {
+                        var particleSizeOverLifetime = SystemAPI.GetComponent<ParticleSizeOverLifetime>(entity);
+                        var curveRef = particleSizeOverLifetime.curveRef;
+                        commands.AddComponent(entityInQueryIndex, newParticle, new SizeOverLifetime { curveRef = curveRef });
+                        particleTransform.Scale = curveRef.Value.Evaluate(0.0f) * sizeValue;
+                    }
 
-			m_CommandBuffer.AddJobHandleForProducer(this.Dependency);
-		}
+                    if (hasColorOverLifetime)
+                    {
+                        var particleColorOverLifetime = SystemAPI.GetComponent<ParticleColorOverLifetime>(entity);
+                        var gradientsRef = particleColorOverLifetime.gradientsRef;
+                        commands.AddComponent(entityInQueryIndex, newParticle, new ColorOverLifetime { gradientsRef = gradientsRef });
+                        commands.AddComponent(entityInQueryIndex, newParticle, new MaterialBaseColor { value = gradientsRef.Value.Evaluate(0.0f) });
+                    }
 
-		protected override void OnDestroy()
-		{
-			m_RandomArray.Dispose();
-			base.OnDestroy();
-		}
-	}
+                    commands.SetComponent(entityInQueryIndex, newParticle, particleTransform);
+
+                    commands.DestroyEntity(entityInQueryIndex, entity);
+                })
+                .ScheduleParallel();
+
+            m_CommandBuffer.AddJobHandleForProducer(this.Dependency);
+        }
+
+        protected override void OnDestroy()
+        {
+            m_RandomArray.Dispose();
+
+            base.OnDestroy();
+        }
+    }
 }

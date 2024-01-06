@@ -1,11 +1,10 @@
 ﻿using Unity.Entities;
 
-namespace CommonECS.Components
+namespace Components
 {
-	[GenerateAuthoringComponent]
-	public struct ParticleEmissionSphere : IComponentData
-	{
-		public float min;
-		public float max;
-	}
+    public struct ParticleEmissionSphere : IComponentData
+    {
+        public float min;
+        public float max;
+    }
 }

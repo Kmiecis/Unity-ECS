@@ -1,10 +1,9 @@
 ﻿using Unity.Entities;
 
-namespace CommonECS.Components
+namespace Components
 {
-	[GenerateAuthoringComponent]
-	public struct ApproachTarget : IComponentData
-	{
-		public Entity value;
-	}
+    public struct ApproachTarget : IComponentData
+    {
+        public Entity value;
+    }
 }

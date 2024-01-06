@@ -1,29 +1,29 @@
-﻿using CommonECS.Components;
+﻿using Components;
 using CommonECS.Mathematics;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-namespace CommonECS.Systems
+namespace Systems
 {
-	public class RotateToRotationSystem : SystemBase
-	{
-		protected override void OnUpdate()
-		{
-			var deltaTime = Time.DeltaTime;
+    public partial class RotateToRotationSystem : SystemBase
+    {
+        protected override void OnUpdate()
+        {
+            var deltaTime = World.Time.DeltaTime;
 
-			Entities
-				.ForEach((ref Rotation rotation, in RotateToRotation rotate, in RotateSpeed speed) =>
-				{
-					var currentRotation = rotation.Value;
-					var targetRotation = rotate.rotation;
+            Entities
+                .ForEach((ref LocalTransform transform, in RotateToRotation rotate, in RotateSpeed speed) =>
+                {
+                    var currentRotation = transform.Rotation;
+                    var targetRotation = rotate.rotation;
 
-					var radians = math.radians(speed.value);
-					var newRotation = mathu.rotate_towards(currentRotation, targetRotation, radians * deltaTime);
+                    var radians = math.radians(speed.value);
+                    var newRotation = mathu.rotate_towards(currentRotation, targetRotation, radians * deltaTime);
 
-					rotation.Value = newRotation;
-				})
-				.ScheduleParallel();
-		}
-	}
+                    transform.Rotation = newRotation;
+                })
+                .ScheduleParallel();
+        }
+    }
 }

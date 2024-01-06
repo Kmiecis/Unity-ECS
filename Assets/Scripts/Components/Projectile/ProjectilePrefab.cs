@@ -1,10 +1,9 @@
 ﻿using Unity.Entities;
 
-namespace CommonECS.Components
+namespace Components
 {
-	[GenerateAuthoringComponent]
-	public struct ProjectilePrefab : IComponentData
-	{
-		public Entity value;
-	}
+    public struct ProjectilePrefab : IComponentData
+    {
+        public Entity value;
+    }
 }

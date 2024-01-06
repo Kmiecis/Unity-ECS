@@ -1,9 +1,8 @@
 ﻿using Unity.Entities;
 
-namespace CommonECS.Components
+namespace Components
 {
-	[GenerateAuthoringComponent]
-	public struct PlayerTag : IComponentData
-	{
-	}
+    public struct PlayerTag : IComponentData
+    {
+    }
 }

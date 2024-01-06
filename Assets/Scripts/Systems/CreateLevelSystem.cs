@@ -1,44 +1,50 @@
-﻿using CommonECS.Components;
+﻿using Components;
 using Unity.Entities;
-using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-namespace CommonECS.Systems
+namespace Systems
 {
-	public class CreateLevelSystem : SystemBase
-	{
-		private BeginInitializationEntityCommandBufferSystem m_CommandBufferSystem;
+    public partial class CreateLevelSystem : SystemBase
+    {
+        private BeginInitializationEntityCommandBufferSystem m_CommandBufferSystem;
 
-		protected override void OnCreate()
-		{
-			base.OnCreate();
-			m_CommandBufferSystem = World.GetOrCreateSystem<BeginInitializationEntityCommandBufferSystem>();
-		}
+        protected override void OnCreate()
+        {
+            base.OnCreate();
 
-		protected override void OnUpdate()
-		{
-			var commandBuffer = m_CommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
+            m_CommandBufferSystem = World.GetOrCreateSystemManaged<BeginInitializationEntityCommandBufferSystem>();
+        }
 
-			var prefab = GetSingleton<PlatformPrefab>();
+        protected override void OnUpdate()
+        {
+            if (SystemAPI.TryGetSingleton<PlatformPrefab>(out var data))
+            {
+                var commands = m_CommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
 
-			Entities.ForEach((Entity requestEntity, in CreateLevelRequest request) => {
-				var requestPosition = request.position;
-				var requestSize = request.size;
+                var transform = SystemAPI.GetComponent<LocalTransform>(data.value);
 
-				for (int y = 0; y < requestSize.y; y++)
-				{
-					for (int x = 0; x < requestSize.x; x++)
-					{
-						var entity = commandBuffer.Instantiate(requestEntity.Index, prefab.value);
-						commandBuffer.SetComponent(requestEntity.Index, entity, new Translation { Value = new float3(x, 0, y) });
-					}
-				}
+                Entities
+                    .ForEach((Entity requestEntity, in CreateLevelRequest request) =>
+                    {
+                        var requestPosition = request.position;
+                        var requestSize = request.size;
 
-				commandBuffer.DestroyEntity(requestEntity.Index, requestEntity);
-			}).ScheduleParallel();
+                        for (int y = 0; y < requestSize.y; y++)
+                        {
+                            for (int x = 0; x < requestSize.x; x++)
+                            {
+                                var entity = commands.Instantiate(requestEntity.Index, data.value);
+                                commands.SetComponent(requestEntity.Index, entity, transform.WithPosition(new float3(x, 0.0f, y)));
+                            }
+                        }
 
-			m_CommandBufferSystem.AddJobHandleForProducer(this.Dependency);
-		}
-	}
+                        commands.DestroyEntity(requestEntity.Index, requestEntity);
+                    })
+                    .ScheduleParallel();
+
+                m_CommandBufferSystem.AddJobHandleForProducer(this.Dependency);
+            }
+        }
+    }
 }

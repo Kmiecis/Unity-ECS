@@ -1,20 +1,20 @@
-﻿using CommonECS.Components;
+﻿using Components;
 using Unity.Entities;
 
-namespace CommonECS.Systems
+namespace Systems
 {
-	public class LivetimeSystem : SystemBase
-	{
-		protected override void OnUpdate()
-		{
-			var deltaTime = Time.DeltaTime;
+    public partial class LivetimeSystem : SystemBase
+    {
+        protected override void OnUpdate()
+        {
+            var deltaTime = World.Time.DeltaTime;
 
-			Entities
-				.ForEach((ref Livetime livetime) =>
-				{
-					livetime.value += deltaTime;
-				})
-				.ScheduleParallel();
-		}
-	}
+            Entities
+                .ForEach((ref Livetime livetime) =>
+                {
+                    livetime.value += deltaTime;
+                })
+                .ScheduleParallel();
+        }
+    }
 }

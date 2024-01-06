@@ -1,10 +1,9 @@
 ﻿using Unity.Entities;
 
-namespace CommonECS.Components
+namespace Components
 {
-	[GenerateAuthoringComponent]
-	public struct FireCooldown : IComponentData
-	{
-		public float value;
-	}
+    public struct FireCooldown : IComponentData
+    {
+        public float value;
+    }
 }

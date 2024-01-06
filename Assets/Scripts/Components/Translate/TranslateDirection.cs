@@ -1,11 +1,10 @@
 ﻿using Unity.Entities;
 using Unity.Mathematics;
 
-namespace CommonECS.Components
+namespace Components
 {
-	[GenerateAuthoringComponent]
-	public struct TranslateDirection : IComponentData
-	{
-		public float3 value;
-	}
+    public struct TranslateDirection : IComponentData
+    {
+        public float3 value;
+    }
 }

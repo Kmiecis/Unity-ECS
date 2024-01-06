@@ -1,10 +1,10 @@
-﻿using CommonECS.Structs;
+﻿using Structs;
 using Unity.Entities;
 
-namespace CommonECS.Components
+namespace Components
 {
-	public struct ParticleSizeOverLifetime : IComponentData
-	{
-		public BlobAssetReference<SampledAnimationCurve> curveRef;
-	}
+    public struct ParticleSizeOverLifetime : IComponentData
+    {
+        public BlobAssetReference<SampledAnimationCurve> curveRef;
+    }
 }

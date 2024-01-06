@@ -1,53 +1,54 @@
-﻿using CommonECS.Components;
+﻿using Components;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-namespace CommonECS.Systems
+namespace Systems
 {
-	public class FireSystem : SystemBase
-	{
-		private BeginInitializationEntityCommandBufferSystem m_CommandBufferSystem;
+    public partial class FireSystem : SystemBase
+    {
+        private BeginInitializationEntityCommandBufferSystem m_CommandBufferSystem;
 
-		protected override void OnCreate()
-		{
-			base.OnCreate();
-			m_CommandBufferSystem = World.GetOrCreateSystem<BeginInitializationEntityCommandBufferSystem>();
-		}
+        protected override void OnCreate()
+        {
+            base.OnCreate();
 
-		protected override void OnUpdate()
-		{
-			var commandBuffer = m_CommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
-			var deltaTime = Time.DeltaTime;
+            m_CommandBufferSystem = World.GetOrCreateSystemManaged<BeginInitializationEntityCommandBufferSystem>();
+        }
 
-			Entities
-				.ForEach((int entityInQueryIndex, ref FireCooldown fireCooldown, in FireInput fireInput, in FireInterval fireInterval, in FireSpeed fireSpeed, in ProjectilePrefab projectilePrefab, in ProjectileSpawn projectileSpawn, in LocalToWorld localToWorld) =>
-				{
-					fireCooldown.value -= deltaTime;
+        protected override void OnUpdate()
+        {
+            var commands = m_CommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
+            var deltaTime = World.Time.DeltaTime;
 
-					if (
-						fireInput.fire &&
-						fireCooldown.value <= 0.0f
-					)
-					{
-						var firedProjectile = commandBuffer.Instantiate(entityInQueryIndex, projectilePrefab.value);
+            Entities
+                .ForEach((int entityInQueryIndex, ref FireCooldown fireCooldown, in FireInput fireInput, in FireInterval fireInterval, in FireSpeed fireSpeed, in ProjectilePrefab projectilePrefab, in ProjectileSpawn projectileSpawn, in LocalToWorld localToWorld) =>
+                {
+                    fireCooldown.value -= deltaTime;
 
-						var firedTranslateDirectionComponent = new TranslateDirection { value = localToWorld.Forward };
-						var firedTranslateSpeedComponent = new TranslateSpeed { value = fireSpeed.value };
-						var firedTranslationComponent = new Translation { Value = math.transform(localToWorld.Value, projectileSpawn.offset) };
-						var firedRotationComponent = new Rotation { Value = quaternion.LookRotation(localToWorld.Forward, math.up()) };
+                    if (fireInput.fire &&
+                        fireCooldown.value <= 0.0f)
+                    {
+                        var firedProjectile = commands.Instantiate(entityInQueryIndex, projectilePrefab.value);
 
-						commandBuffer.SetComponent(entityInQueryIndex, firedProjectile, firedTranslateDirectionComponent);
-						commandBuffer.SetComponent(entityInQueryIndex, firedProjectile, firedTranslateSpeedComponent);
-						commandBuffer.SetComponent(entityInQueryIndex, firedProjectile, firedTranslationComponent);
-						commandBuffer.SetComponent(entityInQueryIndex, firedProjectile, firedRotationComponent);
+                        var firedTranslateDirection = new TranslateDirection { value = localToWorld.Forward };
+                        var firedTranslateSpeed = new TranslateSpeed { value = fireSpeed.value };
+                        var firedTransform = new LocalTransform
+                        {
+                            Position = math.transform(localToWorld.Value, projectileSpawn.offset),
+                            Rotation = quaternion.LookRotation(localToWorld.Forward, math.up())
+                        };
 
-						fireCooldown.value = fireInterval.value;
-					}
-				})
-				.ScheduleParallel();
+                        commands.SetComponent(entityInQueryIndex, firedProjectile, firedTranslateDirection);
+                        commands.SetComponent(entityInQueryIndex, firedProjectile, firedTranslateSpeed);
+                        commands.SetComponent(entityInQueryIndex, firedProjectile, firedTransform);
 
-			m_CommandBufferSystem.AddJobHandleForProducer(this.Dependency);
-		}
-	}
+                        fireCooldown.value = fireInterval.value;
+                    }
+                })
+                .ScheduleParallel();
+
+            m_CommandBufferSystem.AddJobHandleForProducer(this.Dependency);
+        }
+    }
 }

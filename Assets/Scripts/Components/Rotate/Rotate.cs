@@ -1,11 +1,10 @@
 ﻿using Unity.Entities;
 using Unity.Mathematics;
 
-namespace CommonECS.Components
+namespace Components
 {
-	[GenerateAuthoringComponent]
-	public struct Rotate : IComponentData
-	{
-		public quaternion value;
-	}
+    public struct Rotate : IComponentData
+    {
+        public quaternion value;
+    }
 }

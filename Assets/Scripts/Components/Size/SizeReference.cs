@@ -1,10 +1,9 @@
 ﻿using Unity.Entities;
 
-namespace CommonECS.Components
+namespace Components
 {
-	[GenerateAuthoringComponent]
-	public struct SizeReference : IComponentData
-	{
-		public float value;
-	}
+    public struct SizeReference : IComponentData
+    {
+        public float value;
+    }
 }
