@@ -1,4 +1,5 @@
-﻿using CommonECS.Mathematics;
+﻿using CommonECS.Extensions;
+using CommonECS.Mathematics;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;

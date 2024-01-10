@@ -1,4 +1,5 @@
-﻿using CommonECS.Mathematics;
+﻿using CommonECS.Extensions;
+using CommonECS.Mathematics;
 using System.Runtime.CompilerServices;
 using Unity.Collections;
 using Unity.Entities;
@@ -27,7 +28,7 @@ namespace Structs
                 var keys = blobBuilder.Allocate(ref root.keys, samples);
                 var step = 1.0f / (samples - 1);
                 for (int i = 0; i < samples; ++i)
-                    keys[i] = graphx.rgba(gradient.Evaluate(i * step));
+                    keys[i] = gradient.Evaluate(i * step).rgba();
                 root.samples = samples;
                 return blobBuilder.CreateBlobAssetReference<SampledGradient>(Allocator.Persistent);
             }
