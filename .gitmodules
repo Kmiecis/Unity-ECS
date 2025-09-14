@@ -1,7 +1,0 @@
-[submodule "Assets/Packages/Unity-Package-ECS-Commons"]
-	path = Assets/Packages/Unity-Package-ECS-Commons
-	url = https://github.com/Kmiecis/Unity-Package-ECS-Commons
-
-[submodule "Assets/Packages/Unity-Package-Mathematics-Commons"]
-	path = Assets/Packages/Unity-Package-Mathematics-Commons
-	url = https://github.com/Kmiecis/Unity-Package-Mathematics-Commons
