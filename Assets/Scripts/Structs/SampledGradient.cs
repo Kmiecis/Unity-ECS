@@ -1,5 +1,4 @@
-﻿using CommonECS.Extensions;
-using CommonECS.Mathematics;
+﻿using Common.Mathematics;
 using System.Runtime.CompilerServices;
 using Unity.Collections;
 using Unity.Entities;
@@ -16,7 +15,7 @@ namespace Structs
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ref float4 Evaluate(float value)
         {
-            var index = mathx.round(value * (samples - 1));
+            var index = mathx.round_to_int(value * (samples - 1));
             return ref keys[index];
         }
 

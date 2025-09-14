@@ -1,4 +1,4 @@
-using CommonECS;
+using Common.ECS;
 using Unity.Entities;
 
 namespace Components.Authoring

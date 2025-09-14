@@ -1,4 +1,4 @@
-﻿using CommonECS;
+﻿using Common.ECS;
 using Structs;
 using Unity.Entities;
 using UnityEngine;

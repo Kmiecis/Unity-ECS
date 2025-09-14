@@ -1,4 +1,4 @@
-﻿using CommonECS.Mathematics;
+﻿using Common.Mathematics;
 using System.Runtime.CompilerServices;
 using Unity.Collections;
 using Unity.Entities;
@@ -16,7 +16,7 @@ namespace Structs
         {
             var sampled = value * (keys.Length - 1);
 
-            var index = mathx.round(sampled);
+            var index = mathx.round_to_int(sampled);
             if (index < sampled)
             {
                 var prevValue = keys[index];

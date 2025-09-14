@@ -1,5 +1,5 @@
-﻿using Components;
-using CommonECS.Mathematics;
+﻿using Common.Mathematics;
+using Components;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
